@@ -1,0 +1,95 @@
+---
+status: accepted
+date: 2026-10-24
+decision-makers: Elephant (оркестратор, прокси заказчика по D-008)
+consulted: агент-исследователь (docs/research/02-storage-engine-and-language.md)
+informed: все агенты-исполнители (Goldfish)
+---
+
+# 0015. Тестирование надёжности: детерминированная симуляция, внедрение сбоев, перебор состояний, модельные тесты, фаззинг, LazyFS
+
+## Status
+
+Accepted, 2026-10-24. Решение D-026.
+
+## Context and Problem Statement
+
+Протокол коммита (ADR 0005) обещает: подтверждённое переживает сбой, неподтверждённое откатывается целиком, повреждение обнаруживается явно. ALICE нашёл 60 уязвимостей в 11 зрелых приложениях (docs/research/02, §3.6, [S25]); LazyFS нашла 8 новых багов в PostgreSQL, etcd, ZooKeeper, Redis, LevelDB и др. (docs/research/02, §4, [S29]). Тест kill -9 сам по себе недостаточен: ОС всё равно сбрасывает page cache (docs/research/02, §4, [S30]).
+
+Как доказать, что гарантии долговечности и корректности выполняются?
+
+## Decision Drivers
+
+* Заявления об отказоустойчивости убедительны только с fault injection (D-026; прецеденты FoundationDB, TigerBeetle, ALICE — docs/research/02, §4).
+* Воспроизводимость: любой упавший тест повторяется по seed.
+* Покрытие классов ошибок из fsyncgate, ALICE и FAST'17 (docs/research/02, §8 ADR-006).
+
+## Considered Options
+
+1. **Полный набор: DST (трейт Storage + SimDisk), fault injection на каждом системном вызове коммита, перебор состояний после сбоя в стиле ALICE, модельные property-тесты, фаззинг формата, kill -9 и LazyFS, проверка целостности в CI** — выбрано.
+2. **Только юнит- и интеграционные тесты + kill -9.**
+3. **Внешний Jepsen-стенд.**
+4. **Платный детерминированный гипервизор (Antithesis).**
+
+## Decision Outcome
+
+Выбран вариант 1 (D-026). Обязательны:
+
+* **Детерминированная симуляция:** весь I/O идёт через трейт `Storage`; в тестах его заменяет `SimDisk` — ГПСЧ от seed, модель «записано / сброшено fsync», инъекция порванных записей, потери несброшенного, EIO, битовых ошибок; время и планирование управляемые (docs/research/02, §4; прецеденты FoundationDB [S31], TigerBeetle VOPR [S32], Turso/Limbo [S34]).
+* **Внедрение сбоев на каждом системном вызове коммита:** ошибка на i-м вызове для каждого i (по мотивам VFS-тестов SQLite, docs/research/02, §4, [S33]).
+* **Перебор состояний после сбоя в стиле ALICE:** записать трассу коммита, сгенерировать префиксы и переупорядочения в пределах барьеров fsync, проверить инварианты после «перезапуска» (docs/research/02, §4, [S25], [S28]).
+* **Property-тесты на основе модели:** последовательности операций сравниваются с моделью в памяти (ассоциативные массивы имя → id, телефон → id), включая префиксный поиск и перезапуск после каждого шага (docs/research/02, §4, [S36]).
+* **Фаззинг формата страниц и файла:** разбор страницы, мета-страницы, открытие произвольного файла; никаких паник, только ошибка «повреждено» (docs/research/02, §4, [S37]).
+* **kill -9 и потеря питания через LazyFS** (Linux; tier 1 — ADR 0014). Объём цикла kill -9 — ≥ 10 000 итераций в ночном CI (docs/research/02, §4) `[ПРЕДЛОЖЕНИЕ АГЕНТА]`: число в журнале не зафиксировано.
+* **Проверка целостности в CI** после каждого сценария (верификатор ADR 0013).
+
+Инструменты — только dev-зависимости: proptest, cargo-fuzz, rand_chacha (D-021, ADR 0006).
+
+Обоснование (D-026): заявления об отказоустойчивости убедительны только с fault injection (ALICE, FoundationDB, TigerBeetle).
+
+### Consequences
+
+* Good, потому что ловятся классы багов из fsyncgate, ALICE и FAST'17 (docs/research/02, §8 ADR-006).
+* Good, потому что любой сбой воспроизводится по seed.
+* Good, потому что фаззинг гарантирует: произвольный файл не роняет процесс.
+* Bad, потому что архитектурное требование: весь I/O, время и ГПСЧ движка инъецируются через интерфейсы (docs/research/02, §8 ADR-006).
+* Bad, потому что LazyFS работает на FUSE, то есть только на Linux (docs/research/02, §4).
+* Bad, потому что реальную потерю питания конкретного SSD тесты не заменяют (FAST'13, docs/research/02, §4, [S27]); для ДЗ физические тесты опциональны.
+* Bad, потому что `proptest-state-machine`, предложенный исследованием (docs/research/02, §6.2), в allowlist D-021 не назван — вопрос к оркестратору.
+
+### Confirmation
+
+* CI запускает: модельные property-тесты, перебор точек отказа коммита, перебор состояний после сбоя, фаззинг (ограниченный по времени на каждый PR и длительный ночью), цикл kill -9, сценарии LazyFS; после каждого — верификатор целостности.
+* Отчёт CI содержит seed упавшего прогона; повтор с тем же seed воспроизводит ошибку.
+* Ревью: модули движка не вызывают файловые API напрямую, только через `Storage` (поиск по исходникам).
+
+## Pros and Cons of the Options
+
+### Полный набор (DST + сбои + перебор + модель + фаззинг + LazyFS)
+
+* Good: широкое покрытие и воспроизводимость.
+* Bad: требует архитектурных интерфейсов и времени CI.
+
+### Юнит-тесты + kill -9
+
+* Good: дёшево.
+* Bad: kill -9 не проверяет потерю несброшенного кэша (docs/research/02, §4, [S30]).
+
+### Jepsen
+
+* Good: проверка истории операций на линеаризуемость.
+* Bad: рассчитан на распределённые системы; у одного узла нет сети и консенсуса; полный стенд избыточен (docs/research/02, §4, оценка исследователя).
+
+### Antithesis
+
+* Good: детерминированный гипервизор для всего процесса (docs/research/02, §4, [S35]).
+* Bad: внешний платный сервис `[ДОПУЩЕНИЕ]`.
+
+## More Information
+
+* FoundationDB testing — https://apple.github.io/foundationdb/testing.html ; TigerBeetle safety — https://docs.tigerbeetle.com/concepts/safety/ ; Turso/Limbo — https://turso.tech/blog/introducing-limbo-a-complete-rewrite-of-sqlite-in-rust (docs/research/02, §4).
+* SQLite testing — https://www.sqlite.org/testing.html (docs/research/02, §4).
+* ALICE — https://www.usenix.org/conference/osdi14/technical-sessions/presentation/pillai ; CrashMonkey/ACE — https://www.usenix.org/conference/osdi18/presentation/mohan (docs/research/02, §4).
+* LazyFS — https://www.vldb.org/pvldb/vol17/p3017-ramos.pdf ; Jepsen — https://jepsen.io/filesystem (docs/research/02, §4).
+* proptest-state-machine — https://docs.rs/proptest-state-machine ; cargo-fuzz — https://rust-fuzz.github.io/book/cargo-fuzz.html (docs/research/02, §4).
+* Связанные ADR: 0004 (I/O через один интерфейс), 0005 (протокол), 0013 (верификатор), 0014 (платформы).
