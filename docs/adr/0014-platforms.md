@@ -79,3 +79,9 @@ Accepted, 2026-10-24. Решение D-023.
 * FlushFileBuffers — https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers ; MoveFileEx atomicity — https://bugs.python.org/issue8828 ; MOVEFILE_WRITE_THROUGH — https://gitlab.haskell.org/ghc/ghc/-/merge_requests/1682 (docs/research/02, §3.3).
 * LazyFS — https://www.vldb.org/pvldb/vol17/p3017-ramos.pdf (docs/research/02, §4).
 * Связанные ADR: 0005 (протокол коммита), 0015 (тестирование).
+
+## Изменения после ревью 2026-10-24
+
+По D-005 принятый ADR не переписывается: текст выше оставлен как был, а решения, принятые после его написания и затрагивающие этот ADR, перечислены здесь (разбор ревью раунда 1 — `docs/reviews/GOLDFISH.md`, полный текст решений — `docs/orchestrator-decisions.md`). Этот раздел добавлен решением D-114: ADR 0003, 0006, 0013, 0014, 0015, 0016 и 0017 ранее были затронуты решениями только в деталях. При расхождении с текстом выше действует этот раздел.
+
+* **Предложения редактора движка (D-109).** Порог свободного места 128 МиБ и файл-маркер повреждения применяются на всех платформах tier 1 и tier 2.

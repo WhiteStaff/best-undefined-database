@@ -10,7 +10,7 @@ informed: все агенты-исполнители (Goldfish)
 
 ## Status
 
-Accepted, 2026-10-24. Решения D-013, D-017 (с учётом D-028: CUJ-04, CUJ-05; D-032: один бинарник).
+Accepted, 2026-10-24. Решения D-013, D-017 (с учётом D-028: CUJ-04, CUJ-05; D-032: один бинарник). Дополнен 2026-10-24: см. раздел «Изменения после ревью 2026-10-24» (D-099; D-044 опровергнут).
 
 ## Context and Problem Statement
 
@@ -104,3 +104,11 @@ Accepted, 2026-10-24. Решения D-013, D-017 (с учётом D-028: CUJ-04
 * RFC 4180 — https://www.rfc-editor.org/rfc/rfc4180.html ; NDJSON — https://github.com/ndjson/ndjson-spec (docs/research/03, §4.8).
 * Prometheus exposition formats — https://prometheus.io/docs/instrumenting/exposition_formats/ ; Kubernetes health endpoints — https://kubernetes.io/docs/reference/using-api/health-checks/ (docs/research/03, §4.9).
 * Связанные ADR: 0011 (аутентификация), 0012 (удаление), 0013 (бэкап), 0017 (бинарник и runtime).
+
+## Изменения после ревью 2026-10-24
+
+По D-005 и Nygard принятый ADR не переписывается: текст выше оставлен как был, а решения, принятые после ревью раунда 1 (`docs/reviews/round1-*.md`, разбор — `docs/reviews/GOLDFISH.md`), дописаны здесь. При расхождении с текстом выше действует этот раздел.
+
+* **Тип ошибки RFC 9457 (D-099, заменяет D-044).** `type` = абсолютный URI `{public_origin}/problems/<code>`; BUDB сам отдаёт по нему страницу с описанием ошибки для человека. В теле ошибки обязателен член-расширение `code` — стабильный идентификатор; клиенты ОБЯЗАНЫ сравнивать ошибки по `code`, а не по `type`.
+* **D-044 опровергнут** (EX2-21, fact-check EX2 F1, F2). Форма `urn:budb:problem:<code>` синтаксически является URI, и RFC 9457 разрешает нерезолвимые `type`, но как URN она невалидна: по RFC 8141 NID должен быть зарегистрирован, а `budb` не зарегистрирован. RFC 9457 §3.1.1 поощряет резолвимые URI. `type` входит в контракт v1 (API-03), поэтому форму исправили до выпуска.
+* **Прочие решения по API после ADR.** Пункты `[ПРЕДЛОЖЕНИЕ АГЕНТА]` из Decision Outcome утверждены решением D-059 (OpenAPI 3.1, RFC 9457, 412/428, keyset по AIP-158, `Idempotency-Key`; 503 — перегрузка или неготовность, 429 — лимит клиента). Страница 20, максимум 100 (D-047). Курсор keyset на свежем снимке, 24 ч (D-048), шифруется AEAD ChaCha20-Poly1305 (D-082). Сессии UI — `POST/GET/DELETE /api/v1/session` с `csrf_token` (D-068). Поля `id`, `version`, `created`, `updated` во входе игнорируются (D-071). Лимит частоты 50 запросов/с на токен (D-073).

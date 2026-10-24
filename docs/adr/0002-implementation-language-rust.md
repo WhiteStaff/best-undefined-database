@@ -10,7 +10,7 @@ informed: все агенты-исполнители (Goldfish)
 
 ## Status
 
-Accepted, 2026-10-24. Решение D-020.
+Accepted, 2026-10-24. Решение D-020. Частично заменён ADR 0018, 2026-10-24 (D-090).
 
 ## Context and Problem Statement
 
@@ -100,3 +100,12 @@ Accepted, 2026-10-24. Решение D-020.
 * A Guide to the Go GC — https://go.dev/doc/gc-guide ; Discord — https://discord.com/blog/why-discord-is-switching-from-go-to-rust (docs/research/02, §5.1).
 * redb — https://github.com/cberner/redb (docs/research/02, §5.1).
 * Связанные ADR: 0004 (без mmap), 0006 (зависимости), 0017 (runtime и потоки).
+
+## Изменения после ревью 2026-10-24
+
+По D-005 и Nygard принятый ADR не переписывается: текст выше оставлен как был, а решения, принятые после ревью раунда 1 (`docs/reviews/round1-*.md`, разбор — `docs/reviews/GOLDFISH.md`), дописаны здесь. При расхождении с текстом выше действует этот раздел.
+
+* **Частично заменён ADR 0018** (D-090, замечание EX1-06). Правило «`#![forbid(unsafe_code)]` во всех крейтах» из Decision Outcome и Confirmation заменено: `forbid(unsafe_code)` действует во всех крейтах, кроме изолированного крейта `budb-sys` (FFI: `MoveFileExW` с `MOVEFILE_WRITE_THROUGH`, аппаратные intrinsics CRC32C с определением во время выполнения, любые вызовы `libc`). У каждого `unsafe`-блока — комментарий `SAFETY`, Miri где применимо, ревью двумя рецензентами.
+* **Допущение опровергнуто.** Последний пункт Consequences («сами привязки содержат `unsafe` внутри себя, но это код сторонних крейтов») неверен: функции `libc` и `windows-sys` — это `unsafe fn`, и вызвать их можно только из `unsafe`-блока в нашем крейте (EX1-06). Довод «`forbid(unsafe_code)` достижим, потому что mmap не используется» тоже неполон: std не покрывает `MOVEFILE_WRITE_THROUGH` и выбор аппаратной CRC32C во время выполнения (fact-check EX1 F4, F16).
+* **Подтверждено fact-check EX1:** `sync_all`/`sync_data` на macOS вызывают `F_FULLFSYNC` (F3), на Windows — `FlushFileBuffers` (F4); `File::lock`/`try_lock` стабильны с Rust 1.89 (F6); edition 2024 стабилизирована в 1.85, то есть MSRV 1.89 с ней совместима (F7).
+* Остальные решения ADR (Rust stable, MSRV ≥ 1.89, edition 2024, отклонённые языки, запасной вариант Go) действуют.

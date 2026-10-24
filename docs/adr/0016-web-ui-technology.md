@@ -95,3 +95,14 @@ Accepted, 2026-10-24. Решение D-031.
 * CLDR plural rules — https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html (docs/research/03, §5.3).
 * MDN `<mark>` — https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/mark ; Algolia debouncing — https://www.algolia.com/doc/ui-libraries/autocomplete/guides/debouncing-sources ; NN/g response times — https://www.nngroup.com/articles/response-times-3-important-limits/ (docs/research/03, §5.1).
 * Связанные ADR: 0006 (зависимости), 0010 (API), 0011 (сессия и CSRF), 0017 (встраивание в бинарник).
+
+## Изменения после ревью 2026-10-24
+
+По D-005 принятый ADR не переписывается: текст выше оставлен как был, а решения, принятые после его написания и затрагивающие этот ADR, перечислены здесь (разбор ревью раунда 1 — `docs/reviews/GOLDFISH.md`, полный текст решений — `docs/orchestrator-decisions.md`). Этот раздел добавлен решением D-114: ADR 0003, 0006, 0013, 0014, 0015, 0016 и 0017 ранее были затронуты решениями только в деталях. При расхождении с текстом выше действует этот раздел.
+
+* **Восстановление из корзины (D-041).** writer И admin могут просматривать корзину и восстанавливать любой контакт в пределах срока хранения через `POST /api/v1/contacts/{id}:restore`. «Очистить сейчас» (purge) — только admin. Решение заменяет предложенный агентом 5-минутный `:undelete`. Кнопка…
+* **Атрибуты cookie сессии (D-043).** С TLS cookie ОБЯЗАТЕЛЬНО имеет префикс `__Host-` и атрибуты `Secure`, `HttpOnly`, `SameSite=Strict`, `Path=/`. На loopback без TLS (режим разработки по умолчанию) — те же атрибуты, но без `__Host-` и `Secure`. Поведение браузеров на `http://127.0.0.1`…
+* **Транзитивные зависимости, сборка UI, SLO CUJ, CSV-инъекция (D-060).** Allowlist охватывает прямые зависимости; denylist проверяется по всему транзитивному графу (cargo-deny bans). Добавить: proptest-state-machine (только для тестов), sha2, hmac, getrandom/rand_core (RustCrypto и CSPRNG). Сборка UI: только закреплённый tsc…
+* **API сессий веб-UI (D-068).** `POST /api/v1/session` — вход, сервер ставит cookie. `GET /api/v1/session` — возвращает пользователя, роль и `csrf_token` в JSON; UI держит токен в памяти и отправляет его в заголовке `X-CSRF-Token`. `DELETE /api/v1/session` — выход.
+* **UI, CSV-инъекция, исправление research/03 (D-106).** Предупреждение об истечении сессии за 2 мин с кнопкой «Продлить» (WCAG 2.2.1). Автофокус поля поиска и горячая клавиша «/». Кнопка копирования номера в списке результатов (CUJ-02: 2 + n нажатий). Набор опасных первых символов CSV-инъекции дополняется Tab, CR…
+* **Остаточные «частичные» замечания и вопросы 8–11 design.md (D-113).** Имя cookie на loopback — `budb_session`; CSRF обязателен на каждом небезопасном методе с cookie-аутентификацией, включая `POST :search`; позиции подсветки вычисляются на клиенте.
