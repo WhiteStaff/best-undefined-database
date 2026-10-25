@@ -20,11 +20,15 @@
 | `audit_retention_days` | целое | 365 | 30…3650 | `BUDB_AUDIT_RETENTION_DAYS` | PRV-13 |
 | `page_cache_mib` | целое | 512 | ≥ 16 | `BUDB_PAGE_CACHE_MIB` | PERF-09 |
 | `interactive_snapshot_timeout_s` | целое | 30 | 1…300 | `BUDB_INTERACTIVE_SNAPSHOT_TIMEOUT_S` | STO-24 |
-| `query_timeout_ms` | целое | 2000 | 100…30000 | `BUDB_QUERY_TIMEOUT_MS` | D-078 |
+| `query_timeout_ms` | целое | 2000 | 100…30000 | `BUDB_QUERY_TIMEOUT_MS` | SRCH-16; D-078 |
+| `writer_queue_capacity`, `reader_queue_capacity` | целое | 4096, 1024 | 1…1000000 | `BUDB_WRITER_QUEUE_CAPACITY`, `BUDB_READER_QUEUE_CAPACITY` | PERF-14 |
+| `commit_batch_max_ops`, `commit_batch_wait_ms` | целое | 1000, 0 | 1…100000, 0…100 | `BUDB_COMMIT_BATCH_MAX_OPS`, `BUDB_COMMIT_BATCH_WAIT_MS` | STO-13; D-094 |
+| `backup_interval_hours` | целое | 24 | 1…168 | `BUDB_BACKUP_INTERVAL_HOURS` | BKP-17; D-109 |
 | `pinned_pages_max_percent` | целое | 25 | 1…90 | `BUDB_PINNED_PAGES_MAX_PERCENT` | D-093 |
-| `min_free_space_mib` | целое | 1024 | ≥ 64 | `BUDB_MIN_FREE_SPACE_MIB` | D-072 |
+| `min_free_space_mib` (мягкий порог) | целое | 1024 | ≥ `hard_free_space_mib` | `BUDB_MIN_FREE_SPACE_MIB` | STO-41; D-072, D-118 |
+| `hard_free_space_mib` (жёсткий порог) | целое | 128 | ≥ 16 | `BUDB_HARD_FREE_SPACE_MIB` | STO-41; D-109, D-118 |
 | `rate_limit_rps`, `rate_limit_burst` | целое | 50, 100 | 1…100000, ≥ `rate_limit_rps` | `BUDB_RATE_LIMIT_RPS`, `BUDB_RATE_LIMIT_BURST` | API-19; D-073 |
-| `result_quota_per_hour` | целое | 10000 | 1…10^9 | `BUDB_RESULT_QUOTA_PER_HOUR` | ACL-25; D-083 |
+| `result_quota_per_hour` | целое | 10000 | 1…10^9 | `BUDB_RESULT_QUOTA_PER_HOUR` | ACL-25; D-083, D-118 |
 | `login_attempts_per_ip_per_minute` | целое | 20 | 1…1000 | `BUDB_LOGIN_ATTEMPTS_PER_IP_PER_MINUTE` | ACL-15; D-104 |
 | `session_idle_minutes`, `session_absolute_hours` | целое | 30, 8 | 15…30, 4…8 | `BUDB_SESSION_IDLE_MINUTES`, `BUDB_SESSION_ABSOLUTE_HOURS` | ACL-12; D-066 |
 | `max_json_body_kib`, `max_import_mib` | целое | 64, 1024 | 1…1024, 1…4096 | `BUDB_MAX_JSON_BODY_KIB`, `BUDB_MAX_IMPORT_MIB` | API-18, IMP-12 |
@@ -79,8 +83,8 @@
 - **THEN** импорт запускается, а `budb admin export` с тем же токеном завершается с кодом 6
 
 ### Requirement: CLI-04 Команды, требующие остановленного сервера
-Только офлайн при остановленном сервере SHALL выполняться `restore`, `compact` и `bootstrap`. Остальные команды (`users`, `tokens`, `backup`, `verify`, `purge`, `subject`, `import`, `export`, `status`, `renormalize-phones`) MUST работать в обоих режимах. Попытка онлайн-вызова офлайн-команды даёт код 2.
-Трассировка: CUJ-07, CUJ-10; ADR-0013, ADR-0017; D-018, D-025, D-073
+Только офлайн при остановленном сервере SHALL выполняться `restore`, `compact` и `bootstrap`. Остальные команды (`users`, `tokens`, `backup`, `verify`, `purge`, `subject`, `import`, `export`, `status`, `renormalize-phones`, `recover`) MUST работать в обоих режимах, кроме `clock confirm` (только онлайн, CLI-22). Попытка онлайн-вызова офлайн-команды даёт код 2.
+Трассировка: CUJ-07, CUJ-10; ADR-0013, ADR-0017; D-018, D-025, D-073, D-117
 
 #### Scenario: Онлайн-restore
 - **WHEN** выполняется `budb admin restore --server https://db:8443 …`
@@ -91,7 +95,7 @@
 - **THEN** бэкап создаётся без остановки сервера
 
 ### Requirement: CLI-05 Управление пользователями
-Группа `users` SHALL поддерживать `create --login --role`, `set-role`, `disable`, `enable`, `set-password` и `list`. Пароль MUST вводиться без отображения с терминала или читаться из stdin по `--password-stdin`. Понижение или отключение последнего активного admin MUST отклоняться. [ПРЕДЛОЖЕНИЕ АГЕНТА: защита последнего admin]
+Группа `users` SHALL поддерживать `create --login --role`, `set-role`, `disable`, `enable`, `set-password`, `list` и `confirm` (CLI-20). Пароль MUST вводиться без отображения с терминала или читаться из stdin по `--password-stdin`. Понижение или отключение последнего активного admin MUST отклоняться. [ПРЕДЛОЖЕНИЕ АГЕНТА: защита последнего admin]
 Трассировка: CUJ-10; ADR-0011; D-015
 
 #### Scenario: Создание writer
@@ -123,8 +127,8 @@
 - **THEN** запросы с этим токеном не получают 429 ни по частоте, ни по квоте
 
 ### Requirement: CLI-07 Бэкап, восстановление, проверка и уплотнение
-`backup --out`, `restore --from --db`, `verify` и `compact` SHALL выполнять операции по BKP и STO и печатать итог: путь, размер и контрольную сумму или нарушения; `verify` при повреждении MUST завершаться кодом 3. `restore` принимает `--purge-journal <путь>` (повторяемый) и `--accept-purge-gap` по PRV-10 и сообщает, что токены отозваны (ACL-10).
-Трассировка: CUJ-07, CUJ-09; ADR-0013, ADR-0015; D-025, D-069, D-079
+`backup --out`, `restore --from --db`, `verify` и `compact` SHALL выполнять операции по BKP и STO и печатать итог (путь, размер, контрольная сумма, нарушения); `verify` при повреждении MUST давать код 3. `restore` принимает `--purge-journal <путь>`, `--accept-purge-gap` (PRV-10), `--as-admin <логин>` (ACL-27) и сообщает об отзыве токенов (ACL-10).
+Трассировка: CUJ-07, CUJ-09; ADR-0013, ADR-0015; D-025, D-069, D-079, D-117, D-118
 Источник: docs/research/03 §4.10
 
 #### Scenario: Целая база
@@ -145,7 +149,7 @@
 
 #### Scenario: Токены после restore
 - **WHEN** restore завершился успешно
-- **THEN** команда сообщает, что все API-токены отозваны и их нужно выпустить заново
+- **THEN** команда сообщает, что все API-токены отозваны и их нужно выпустить заново, а пользователи, кроме указанного в `--as-admin`, ждут `users confirm`
 
 ### Requirement: CLI-08 Purge из командной строки
 `budb admin purge --id <id>` SHALL выполнять немедленную очистку по data-privacy (PRV) и печатать квитанцию с `purge_id`, `contact_id` и сроком физического затирания. Несколько идентификаторов MUST читаться из stdin по `--ids-stdin`. Имена и телефоны команда как аргументы не принимает.
@@ -277,7 +281,7 @@ CLI MUST NOT принимать пароли, токены, имена и тел
 
 ### Requirement: CLI-18 Схема конфигурации
 Конфигурация `budb serve` SHALL состоять из плоских ключей таблицы «Схема конфигурации» (раздел Purpose) с указанными типами, значениями по умолчанию и диапазонами; каждый ключ MUST переопределяться переменной `BUDB_<КЛЮЧ>`. Неизвестный ключ, неверный тип или значение вне диапазона MUST давать код 2 до открытия базы с именем ключа в сообщении.
-Трассировка: CUJ-07, CUJ-08; ADR-0017; D-033, D-073, D-101
+Трассировка: CUJ-07, CUJ-08; ADR-0017; D-033, D-073, D-101, D-118
 
 #### Scenario: Значения по умолчанию
 - **WHEN** `budb serve` запущен с конфигурацией, где задан только `db_path`
@@ -306,3 +310,47 @@ CLI MUST NOT принимать пароли, токены, имена и тел
 #### Scenario: Без подтверждения
 - **WHEN** команда запущена без терминала и без `--yes`
 - **THEN** она завершается с кодом 7, и данные не меняются
+
+### Requirement: CLI-20 Подтверждение пользователей после restore
+`budb admin users confirm <id>|--all` SHALL снимать пометку `review_required` (ACL-27) с одного пользователя или со всех помеченных; `<id>` совпадает с логином. Команда MUST работать офлайн с `--db`, чтобы подтвердить первого admin при остановленном сервере, и онлайн через API-39; результат пишется в аудит.
+Трассировка: CUJ-07, CUJ-10; ADR-0011, ADR-0017; D-113, D-117, D-118
+
+#### Scenario: Первый admin офлайн
+- **WHEN** после restore без `--as-admin` выполняется `budb admin users confirm root --db data.budb`
+- **THEN** команда завершается с кодом 0, и `root` входит с прежним паролем
+
+#### Scenario: Подтверждение всех
+- **WHEN** выполняется `budb admin users confirm --all --server https://db:8443`
+- **THEN** пометка снята у всех пользователей, и команда печатает их число
+
+#### Scenario: Неизвестный пользователь
+- **WHEN** выполняется `budb admin users confirm nobody --db data.budb`
+- **THEN** команда завершается с кодом 1, и ничего не меняется
+
+### Requirement: CLI-21 Снятие degraded-read-only из командной строки
+`budb admin recover --clear-degraded` SHALL запускать проверку целостности и снимать degraded-read-only из-за повреждения только при успешной проверке (STO-40). Онлайн команда вызывает API-40 и ждёт задачу; офлайн (`--db`) проверяет файл и удаляет файл-маркер повреждения. При нарушениях команда завершается кодом 3, режим остаётся.
+Трассировка: CUJ-07, CUJ-08; ADR-0005, ADR-0017; D-089, D-117
+
+#### Scenario: Успешное снятие
+- **WHEN** сервер в режиме degraded-read-only из-за повреждения, и `budb admin recover --clear-degraded --server https://db:8443` находит базу целой
+- **THEN** команда завершается с кодом 0, и `GET /readyz` показывает `status` = `ok`
+
+#### Scenario: Нарушения остались
+- **WHEN** проверка находит повреждённую страницу
+- **THEN** команда завершается с кодом 3, режим сохраняется, а отчёт называет страницу без ПДн
+
+#### Scenario: Офлайн-снятие маркера
+- **WHEN** сервер остановлен, и выполняется `budb admin recover --clear-degraded --db data.budb` на целом файле
+- **THEN** файл-маркер удалён, и следующий запуск сервера не входит в degraded-read-only
+
+### Requirement: CLI-22 Подтверждение скачка часов из командной строки
+`budb admin clock confirm` SHALL вызывать API-41, возобновляя автоочистку корзины и ротацию бэкапов после паузы по OBS-21. Команда работает только онлайн (`--server`); с `--db` она MUST завершаться кодом 2, потому что состояние паузы живёт в процессе сервера.
+Трассировка: CUJ-07, CUJ-08, CUJ-09; ADR-0017; D-081, D-117
+
+#### Scenario: Возобновление
+- **WHEN** выполняется `budb admin clock confirm --server https://db:8443` при паузе из-за скачка часов
+- **THEN** команда завершается с кодом 0, и признак паузы в метриках равен 0
+
+#### Scenario: Офлайн-вызов
+- **WHEN** выполняется `budb admin clock confirm --db data.budb`
+- **THEN** команда завершается с кодом 2 и объясняет, что нужен работающий сервер
