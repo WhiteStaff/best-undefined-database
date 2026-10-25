@@ -5,14 +5,17 @@
 // Источники (только чтение):
 //   openspec/changes/<change>/specs/*/spec.md — требования `### Requirement: <ID> <название>`,
 //     строка `Трассировка: CUJ-NN[, …]; ADR-NNNN[, …]; D-NNN[, …]` и сценарии `#### Scenario:`;
-//   docs/cuj.md — заголовки `## CUJ-NN. <название>`.
+//   docs/cuj.md — заголовки `## CUJ-NN. <название>`;
+//   openspec/changes/<change>/tasks.md — строки задач `- [ ] N.M …`; ID требований в такой
+//     строке (в том числе диапазоны `ACL-11…ACL-14` и `STO-01…04`) считаются упомянутыми.
 // Результат: docs/traceability.md (перезаписывается целиком).
 //
 // Запуск из любого каталога (Node ≥ 18, без зависимостей):
 //   node scripts/traceability.mjs            — перегенерировать docs/traceability.md
 //   node scripts/traceability.mjs --check    — то же, плюс код выхода 1, если есть требования
 //                                              без CUJ, CUJ без требований, требования без
-//                                              сценариев или повторяющиеся ID
+//                                              сценариев, требования, не упомянутые ни в одной
+//                                              задаче tasks.md, или повторяющиеся ID
 //   node scripts/traceability.mjs --stdout   — вывести матрицу в stdout, файл не трогать
 //   node scripts/traceability.mjs --change <id> — другой change (по умолчанию add-phonebook-db-v1)
 
@@ -30,6 +33,7 @@ const opt = (name, def) => {
 
 const CHANGE = opt('--change', 'add-phonebook-db-v1');
 const SPECS_DIR = join(ROOT, 'openspec', 'changes', CHANGE, 'specs');
+const TASKS_FILE = join(ROOT, 'openspec', 'changes', CHANGE, 'tasks.md');
 const CUJ_FILE = join(ROOT, 'docs', 'cuj.md');
 const ADR_DIR = join(ROOT, 'docs', 'adr');
 const OUT_FILE = join(ROOT, 'docs', 'traceability.md');
@@ -95,11 +99,36 @@ function parseSpecs() {
   return { caps, reqs };
 }
 
+// ---------- Задачи ----------
+// Возвращает Map: ID требования -> номера задач (`N.M`), в строках которых он упомянут.
+function parseTasks() {
+  const byReq = new Map();
+  if (!existsSync(TASKS_FILE)) return { byReq, found: false };
+  for (const line of read(TASKS_FILE).split('\n')) {
+    const t = line.match(/^\s*-\s*\[[ xX]\]\s+(\d+\.\d+)\b/);
+    if (!t) continue;
+    const ids = new Set();
+    // диапазоны: ACL-11…ACL-14 и STO-01…04
+    for (const m of line.matchAll(/\b([A-Z]{2,5})-(\d{2})\s*(?:…|\.\.\.)\s*(?:\1-)?(\d{2})\b/g)) {
+      for (let n = Number(m[2]); n <= Number(m[3]); n++) ids.add(`${m[1]}-${String(n).padStart(2, '0')}`);
+    }
+    for (const m of line.matchAll(/\b([A-Z]{2,5})-(\d{2})\b/g)) ids.add(`${m[1]}-${m[2]}`);
+    for (const id of ids) {
+      if (!byReq.has(id)) byReq.set(id, []);
+      byReq.get(id).push(t[1]);
+    }
+  }
+  return { byReq, found: true };
+}
+
 // ---------- Сборка отчёта ----------
 function build() {
   const cujs = parseCujs();
   const adrs = parseAdrs();
   const { caps, reqs } = parseSpecs();
+  const { byReq: taskMap, found: tasksFound } = parseTasks();
+  for (const r of reqs) r.tasks = taskMap.get(r.id) || [];
+  const noTask = reqs.filter((r) => r.tasks.length === 0);
 
   const ids = reqs.map((r) => r.id);
   const dupIds = uniq(ids.filter((id, i) => ids.indexOf(id) !== i));
@@ -130,7 +159,7 @@ function build() {
 
   p('# Матрица трассировки BUDB');
   p();
-  p(`Файл сгенерирован скриптом \`scripts/traceability.mjs\` из \`${rel(SPECS_DIR)}/*/spec.md\` (строки \`Трассировка:\` и \`#### Scenario:\`) и \`docs/cuj.md\`. Вручную не редактировать: после изменения спецификаций выполнить \`node scripts/traceability.mjs\` (проверка без расхождений — \`node scripts/traceability.mjs --check\`).`);
+  p(`Файл сгенерирован скриптом \`scripts/traceability.mjs\` из \`${rel(SPECS_DIR)}/*/spec.md\` (строки \`Трассировка:\` и \`#### Scenario:\`), \`docs/cuj.md\` и \`${rel(TASKS_FILE)}\` (номера задач, в которых упомянуто требование). Вручную не редактировать: после изменения спецификаций выполнить \`node scripts/traceability.mjs\` (проверка без расхождений — \`node scripts/traceability.mjs --check\`).`);
   p();
   p('Содержание: 1 — сводка по capability; 2 — CUJ → требования; 3 — требования без CUJ; 4 — CUJ без требований; 5 — требование → CUJ, ADR, решения; 6 — ADR → требования; 7 — прочие проверки.');
   p();
@@ -183,11 +212,11 @@ function build() {
     const rs = reqs.filter((r) => r.cap === cap);
     p(`### ${cap}`);
     p();
-    p('| ID | Требование | Сценариев | CUJ | ADR | Решения |');
-    p('|---|---|---:|---|---|---|');
+    p('| ID | Требование | Сценариев | CUJ | ADR | Решения | Задачи |');
+    p('|---|---|---:|---|---|---|---|');
     for (const r of rs) {
       const adrCell = r.adrs.length ? r.adrs.map((a) => (adrs.has(a) ? `[${a}](adr/${adrs.get(a).file})` : `${a} (нет файла)`)).join(', ') : '—';
-      p(`| ${r.id} | ${r.title.replace(/\|/g, '\\|')} | ${r.scenarios} | ${r.cujs.map((c) => c.slice(4)).join(', ') || '—'} | ${adrCell} | ${r.decisions.join(', ') || '—'} |`);
+      p(`| ${r.id} | ${r.title.replace(/\|/g, '\\|')} | ${r.scenarios} | ${r.cujs.map((c) => c.slice(4)).join(', ') || '—'} | ${adrCell} | ${r.decisions.join(', ') || '—'} | ${r.tasks.join(', ') || '—'} |`);
     }
     p();
   }
@@ -211,24 +240,32 @@ function build() {
   p('|---|---|');
   p(`| Повторяющиеся ID требований | ${dupIds.length ? dupIds.join(', ') : 'нет'} |`);
   p(`| Требования без сценариев | ${noScenario.length ? list(noScenario) : 'нет'} |`);
+  p(`| Требования, не упомянутые ни в одной задаче tasks.md | ${!tasksFound ? `**нет файла ${rel(TASKS_FILE)}**` : noTask.length ? list(noTask) : 'нет'} |`);
   p(`| Требования без ADR в строке «Трассировка» | ${noAdr.length ? list(noAdr) : 'нет'} |`);
   p(`| Ссылки на CUJ, которых нет в docs/cuj.md | ${unknownCuj.length ? list(unknownCuj) : 'нет'} |`);
   p(`| Ссылки на ADR, которых нет в docs/adr/ | ${unknownAdr.length ? list(unknownAdr) : 'нет'} |`);
   p(`| ADR, на которые не ссылается ни одно требование | ${adrWithout.length ? adrWithout.map((a) => `${a} (${adrs.get(a).title})`).join('; ') : 'нет'} |`);
   p();
 
-  const problems = dupIds.length + noCuj.length + cujWithout.length + noScenario.length + unknownCuj.length;
-  return { text: L.join('\n'), problems, stats: { caps: caps.length, reqs: reqs.length, scenarios: totalScen, noCuj: noCuj.length, cujWithout: cujWithout.length } };
+  const noTaskProblems = tasksFound ? noTask.length : reqs.length;
+  const problems = dupIds.length + noCuj.length + cujWithout.length + noScenario.length + unknownCuj.length + noTaskProblems;
+  return {
+    text: L.join('\n'),
+    problems,
+    stats: { caps: caps.length, reqs: reqs.length, scenarios: totalScen, noCuj: noCuj.length, cujWithout: cujWithout.length, noTask: noTaskProblems },
+    noTaskIds: noTask.map((r) => r.id),
+  };
 }
 
-const { text, problems, stats } = build();
+const { text, problems, stats, noTaskIds } = build();
 if (flag('--stdout')) {
   process.stdout.write(text);
 } else {
   writeFileSync(OUT_FILE, text, 'utf8');
-  console.error(`traceability: ${stats.caps} capability, ${stats.reqs} требований, ${stats.scenarios} сценариев; без CUJ: ${stats.noCuj}; CUJ без требований: ${stats.cujWithout} → ${rel(OUT_FILE)}`);
+  console.error(`traceability: ${stats.caps} capability, ${stats.reqs} требований, ${stats.scenarios} сценариев; без CUJ: ${stats.noCuj}; CUJ без требований: ${stats.cujWithout}; без задач в tasks.md: ${stats.noTask} → ${rel(OUT_FILE)}`);
 }
 if (flag('--check') && problems > 0) {
+  if (noTaskIds.length) console.error(`traceability: требования без задач в tasks.md: ${noTaskIds.join(', ')}`);
   console.error(`traceability: найдено проблем: ${problems}`);
   process.exit(1);
 }
