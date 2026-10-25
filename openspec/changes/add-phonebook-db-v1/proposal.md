@@ -43,8 +43,8 @@
 | Принцип | Как применён | Где проверить |
 |---|---|---|
 | Critical User Journey | Десять CUJ (D-028) с SLI и SLO; в строке «Трассировка» каждого требования указан хотя бы один CUJ; матрица «требование → CUJ → задача» генерируется скриптом и проверяется в CI | `docs/cuj.md`, `docs/traceability.md`, `node scripts/traceability.mjs --check` |
-| Elephant + Goldfish | Оркестратор (Elephant) принимает решения D-001…D-120 как прокси заказчика; агенты с чистым контекстом (Goldfish) пишут и рецензируют. Проведено три раунда ревью Goldfish; гейт закрывает оркестратор, а не человек (D-008) | `docs/orchestrator-decisions.md`, `docs/reviews/GOLDFISH.md`, `docs/reviews/round*-goldfish*.md` |
-| (Architectural) Decision Record | Восемнадцать ADR в формате MADR 4.0 (D-005); каждое решение D-NNN ссылается на ADR, каждое требование — на ADR и D-NNN; сводка решений вынесена в `design.md` (приложение «Сводка решений D-001…D-120») | `docs/adr/` (индекс — `docs/adr/README.md`), `design.md` |
+| Elephant + Goldfish | Оркестратор (Elephant) принимает решения D-001…D-121 как прокси заказчика; агенты с чистым контекстом (Goldfish) пишут и рецензируют. Проведено три раунда ревью Goldfish; гейт закрывает оркестратор, а не человек (D-008) | `docs/orchestrator-decisions.md`, `docs/reviews/GOLDFISH.md`, `docs/reviews/round*-goldfish*.md` |
+| (Architectural) Decision Record | Восемнадцать ADR в формате MADR 4.0 (D-005); каждое решение D-NNN ссылается на ADR, каждое требование — на ADR и D-NNN; сводка решений вынесена в `design.md` (приложение «Сводка решений D-001…D-121») | `docs/adr/` (индекс — `docs/adr/README.md`), `design.md` |
 | LLM-expert review | Два экспертных ревью раунда 1: по хранению и SRE (EX1) и по безопасности, API и UX (EX2), с проверкой фактов; замечания разобраны в журнале цикла | `docs/reviews/round1-expert-storage-sre.md`, `docs/reviews/round1-expert-security-api-ux.md`, `docs/reviews/GOLDFISH.md` |
 | Fact Grounding | Три исследования с источниками; в требованиях строки «Источник:» и пометки `[ДОПУЩЕНИЕ]`, `[РАСЧЁТ]`, `[НЕ ПОДТВЕРЖДЕНО]`, `[ПРЕДЛОЖЕНИЕ АГЕНТА]`; fact-check опроверг `urn:budb` как `type` ошибок (D-099) и подтвердил векторы CRC32C и Unicode 18.0 (D-098) | `docs/research/01-principles-and-openspec.md`, `docs/research/02-storage-engine-and-language.md`, `docs/research/03-domain-api-ui-security.md`, экспертные ревью |
 
@@ -60,7 +60,7 @@
 - Онлайн-бэкап (в том числе периодический), restore с защитой от разрыва журнала purge и новой линией БД, verify со сверкой бэкапа и снимка, офлайн-компактизация (BKP); метрики, логи, `/livez`, `/readyz` (OBS).
 - SLO, бенчмарк и условие выпуска (PERF); ограничения сборки, изоляция `unsafe` и обязательные тесты надёжности (BLD).
 - Итог: 15 capability; число требований и сценариев после правок раунда 1 пересчитывает `node scripts/traceability.mjs` (`docs/traceability.md`). Breaking changes нет: это первый выпуск.
-- Решения D-001…D-120 внесены в спецификации (задача 0.1 закрыта). Нормативны спецификации; сводка решений в `design.md` (приложение «Сводка решений D-001…D-120», по одной строке на решение) справочная. Найденное расхождение сводки со спецификацией исправляется по решению с большим номером [ПРЕДЛОЖЕНИЕ АГЕНТА]; журналы правок — `docs/reviews/round1-fixlog-*.md`, `docs/reviews/GOLDFISH.md`.
+- Решения D-001…D-121 внесены в спецификации (задача 0.1 закрыта). Нормативны спецификации; сводка решений в `design.md` (приложение «Сводка решений D-001…D-121», по одной строке на решение) справочная. Найденное расхождение сводки со спецификацией исправляется по решению с большим номером [ПРЕДЛОЖЕНИЕ АГЕНТА]; журналы правок — `docs/reviews/round1-fixlog-*.md`, `docs/reviews/GOLDFISH.md`.
 
 ## Capabilities
 
