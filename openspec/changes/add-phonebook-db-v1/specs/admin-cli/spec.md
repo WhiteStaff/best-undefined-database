@@ -11,13 +11,13 @@
 | `listen` | адрес или массив адресов | `127.0.0.1:8080`, `[::1]:8080` | вне loopback — только с TLS | `BUDB_LISTEN` | ACL-18 |
 | `tls_cert_file`, `tls_key_file` | путь | нет | оба или ни одного | `BUDB_TLS_CERT_FILE`, `BUDB_TLS_KEY_FILE` | ACL-17 |
 | `tls_min_version` | строка | `1.2` | `1.2`, `1.3` | `BUDB_TLS_MIN_VERSION` | ACL-17; D-066 |
-| `public_origin` | абсолютный URL без пути | `https://` при TLS, иначе `http://`, плюс первый адрес `listen` | схема `http` или `https` | `BUDB_PUBLIC_ORIGIN` | ACL-23; D-101 |
+| `public_origin` | абсолютный URL без пути | при loopback-`listen`: `https://` при TLS, иначе `http://`, плюс первый адрес `listen`; вне loopback — нет, обязателен | схема `http` или `https` | `BUDB_PUBLIC_ORIGIN` | ACL-23; D-101 |
 | `trusted_proxies` | массив IP или CIDR | пусто | — | `BUDB_TRUSTED_PROXIES` | ACL-23; D-101 |
 | `default_region` | строка | `RU` | `RU`, `none` | `BUDB_DEFAULT_REGION` | PHN-07; D-052 |
-| `trash_retention_days` | целое | 7 | 1…29 | `BUDB_TRASH_RETENTION_DAYS` | PRV-03; D-049 |
+| `trash_retention_days` | целое | 7 | 1…28 | `BUDB_TRASH_RETENTION_DAYS` | PRV-03; D-049, D-119 |
 | `backup_dir` | путь | нет | — | `BUDB_BACKUP_DIR` | PRV-09, PRV-10; D-069 |
 | `backup_retention_days` | целое | 30 | 1…180 | `BUDB_BACKUP_RETENTION_DAYS` | PRV-11; D-037 |
-| `audit_retention_days` | целое | 365 | 30…3650 | `BUDB_AUDIT_RETENTION_DAYS` | PRV-13 |
+| `audit_retention_days` | целое | 365 | 30…3650, ≥ `backup_retention_days` | `BUDB_AUDIT_RETENTION_DAYS` | PRV-13, BKP-13 |
 | `page_cache_mib` | целое | 512 | ≥ 16 | `BUDB_PAGE_CACHE_MIB` | PERF-09 |
 | `interactive_snapshot_timeout_s` | целое | 30 | 1…300 | `BUDB_INTERACTIVE_SNAPSHOT_TIMEOUT_S` | STO-24 |
 | `query_timeout_ms` | целое | 2000 | 100…30000 | `BUDB_QUERY_TIMEOUT_MS` | SRCH-16; D-078 |
@@ -83,16 +83,24 @@
 - **THEN** импорт запускается, а `budb admin export` с тем же токеном завершается с кодом 6
 
 ### Requirement: CLI-04 Команды, требующие остановленного сервера
-Только офлайн при остановленном сервере SHALL выполняться `restore`, `compact` и `bootstrap`. Остальные команды (`users`, `tokens`, `backup`, `verify`, `purge`, `subject`, `import`, `export`, `status`, `renormalize-phones`, `recover`) MUST работать в обоих режимах, кроме `clock confirm` (только онлайн, CLI-22). Попытка онлайн-вызова офлайн-команды даёт код 2.
-Трассировка: CUJ-07, CUJ-10; ADR-0013, ADR-0017; D-018, D-025, D-073, D-117
+Только офлайн при остановленном сервере SHALL выполняться `restore`, `compact`, `bootstrap` и `renormalize-phones`. Остальные команды (`users`, `tokens`, `backup`, `verify`, `purge`, `subject`, `import`, `export`, `status`, `recover`) MUST работать в обоих режимах, кроме `clock confirm` (только онлайн, CLI-22). Попытка онлайн-вызова офлайн-команды даёт код 2.
+Трассировка: CUJ-07, CUJ-10; ADR-0013, ADR-0017; D-018, D-025, D-073, D-117, D-120
 
 #### Scenario: Онлайн-restore
 - **WHEN** выполняется `budb admin restore --server https://db:8443 …`
 - **THEN** команда завершается с кодом 2 и объясняет, что нужен остановленный сервер и `--db`
 
 #### Scenario: Онлайн-бэкап
+- **WHEN** выполняется `budb admin backup --server https://db:8443`
+- **THEN** бэкап создаётся без остановки сервера и пишется сервером в `backup_dir`
+
+#### Scenario: Онлайн-бэкап с --out
 - **WHEN** выполняется `budb admin backup --server https://db:8443 --out b1.budb-backup`
-- **THEN** бэкап создаётся без остановки сервера
+- **THEN** команда завершается с кодом 2: `--out` допустим только офлайн
+
+#### Scenario: Онлайн-повторная нормализация
+- **WHEN** выполняется `budb admin renormalize-phones --server https://db:8443`
+- **THEN** команда завершается с кодом 2 и объясняет, что нужен остановленный сервер и `--db`
 
 ### Requirement: CLI-05 Управление пользователями
 Группа `users` SHALL поддерживать `create --login --role`, `set-role`, `disable`, `enable`, `set-password`, `list` и `confirm` (CLI-20). Пароль MUST вводиться без отображения с терминала или читаться из stdin по `--password-stdin`. Понижение или отключение последнего активного admin MUST отклоняться. [ПРЕДЛОЖЕНИЕ АГЕНТА: защита последнего admin]
@@ -127,8 +135,8 @@
 - **THEN** запросы с этим токеном не получают 429 ни по частоте, ни по квоте
 
 ### Requirement: CLI-07 Бэкап, восстановление, проверка и уплотнение
-`backup --out`, `restore --from --db`, `verify` и `compact` SHALL выполнять операции по BKP и STO и печатать итог (путь, размер, контрольная сумма, нарушения); `verify` при повреждении MUST давать код 3. `restore` принимает `--purge-journal <путь>`, `--accept-purge-gap` (PRV-10), `--as-admin <логин>` (ACL-27) и сообщает об отзыве токенов (ACL-10).
-Трассировка: CUJ-07, CUJ-09; ADR-0013, ADR-0015; D-025, D-069, D-079, D-117, D-118
+`backup` (`--out` только офлайн), `restore --from --db`, `verify` и `compact` SHALL выполнять операции по BKP и STO и печатать итог (путь, размер, контрольная сумма, нарушения); `verify` при повреждении MUST давать код 3. `restore` принимает `--purge-journal <путь>`, `--accept-purge-gap` (PRV-10), `--as-admin <логин>` (ACL-27) и сообщает об отзыве токенов (ACL-10).
+Трассировка: CUJ-07, CUJ-09; ADR-0013, ADR-0015; D-025, D-069, D-079, D-117, D-118, D-120
 Источник: docs/research/03 §4.10
 
 #### Scenario: Целая база
@@ -281,15 +289,23 @@ CLI MUST NOT принимать пароли, токены, имена и тел
 
 ### Requirement: CLI-18 Схема конфигурации
 Конфигурация `budb serve` SHALL состоять из плоских ключей таблицы «Схема конфигурации» (раздел Purpose) с указанными типами, значениями по умолчанию и диапазонами; каждый ключ MUST переопределяться переменной `BUDB_<КЛЮЧ>`. Неизвестный ключ, неверный тип или значение вне диапазона MUST давать код 2 до открытия базы с именем ключа в сообщении.
-Трассировка: CUJ-07, CUJ-08; ADR-0017; D-033, D-073, D-101, D-118
+Трассировка: CUJ-07, CUJ-08; ADR-0017; D-033, D-073, D-101, D-118, D-119
 
 #### Scenario: Значения по умолчанию
 - **WHEN** `budb serve` запущен с конфигурацией, где задан только `db_path`
 - **THEN** сервер слушает loopback без TLS, регион по умолчанию `RU`, срок корзины 7 дней
 
 #### Scenario: Значение вне диапазона
-- **WHEN** в конфигурации задано `trash_retention_days = 30`
+- **WHEN** в конфигурации задано `trash_retention_days = 29`
 - **THEN** `budb serve` завершается с кодом 2 и называет ключ `trash_retention_days`
+
+#### Scenario: Внешний адрес без public_origin
+- **WHEN** `listen` содержит `0.0.0.0:8443` с TLS, а `public_origin` не задан
+- **THEN** `budb serve` завершается с кодом 2 и называет ключ `public_origin`
+
+#### Scenario: Аудит живёт меньше бэкапов
+- **WHEN** задано `audit_retention_days = 30`, `backup_retention_days = 180`
+- **THEN** `budb serve` завершается с кодом 2 и называет ключ `audit_retention_days`
 
 #### Scenario: Переменная окружения
 - **WHEN** в файле `trash_retention_days = 7`, а в окружении `BUDB_TRASH_RETENTION_DAYS=14`
