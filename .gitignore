@@ -3,3 +3,4 @@ target/
 .DS_Store
 *.tmp
 .claude/scheduled_tasks.lock
+.claude/worktrees/
