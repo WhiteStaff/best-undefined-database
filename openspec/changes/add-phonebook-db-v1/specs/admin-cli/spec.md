@@ -83,16 +83,24 @@
 - **THEN** импорт запускается, а `budb admin export` с тем же токеном завершается с кодом 6
 
 ### Requirement: CLI-04 Команды, требующие остановленного сервера
-Только офлайн при остановленном сервере SHALL выполняться `restore`, `compact` и `bootstrap`. Остальные команды (`users`, `tokens`, `backup`, `verify`, `purge`, `subject`, `import`, `export`, `status`, `renormalize-phones`, `recover`) MUST работать в обоих режимах, кроме `clock confirm` (только онлайн, CLI-22). Попытка онлайн-вызова офлайн-команды даёт код 2.
-Трассировка: CUJ-07, CUJ-10; ADR-0013, ADR-0017; D-018, D-025, D-073, D-117
+Только офлайн при остановленном сервере SHALL выполняться `restore`, `compact`, `bootstrap` и `renormalize-phones`. Остальные команды (`users`, `tokens`, `backup`, `verify`, `purge`, `subject`, `import`, `export`, `status`, `recover`) MUST работать в обоих режимах, кроме `clock confirm` (только онлайн, CLI-22). Попытка онлайн-вызова офлайн-команды даёт код 2.
+Трассировка: CUJ-07, CUJ-10; ADR-0013, ADR-0017; D-018, D-025, D-073, D-117, D-120
 
 #### Scenario: Онлайн-restore
 - **WHEN** выполняется `budb admin restore --server https://db:8443 …`
 - **THEN** команда завершается с кодом 2 и объясняет, что нужен остановленный сервер и `--db`
 
 #### Scenario: Онлайн-бэкап
+- **WHEN** выполняется `budb admin backup --server https://db:8443`
+- **THEN** бэкап создаётся без остановки сервера и пишется сервером в `backup_dir`
+
+#### Scenario: Онлайн-бэкап с --out
 - **WHEN** выполняется `budb admin backup --server https://db:8443 --out b1.budb-backup`
-- **THEN** бэкап создаётся без остановки сервера
+- **THEN** команда завершается с кодом 2: `--out` допустим только офлайн
+
+#### Scenario: Онлайн-повторная нормализация
+- **WHEN** выполняется `budb admin renormalize-phones --server https://db:8443`
+- **THEN** команда завершается с кодом 2 и объясняет, что нужен остановленный сервер и `--db`
 
 ### Requirement: CLI-05 Управление пользователями
 Группа `users` SHALL поддерживать `create --login --role`, `set-role`, `disable`, `enable`, `set-password`, `list` и `confirm` (CLI-20). Пароль MUST вводиться без отображения с терминала или читаться из stdin по `--password-stdin`. Понижение или отключение последнего активного admin MUST отклоняться. [ПРЕДЛОЖЕНИЕ АГЕНТА: защита последнего admin]
@@ -127,8 +135,8 @@
 - **THEN** запросы с этим токеном не получают 429 ни по частоте, ни по квоте
 
 ### Requirement: CLI-07 Бэкап, восстановление, проверка и уплотнение
-`backup --out`, `restore --from --db`, `verify` и `compact` SHALL выполнять операции по BKP и STO и печатать итог (путь, размер, контрольная сумма, нарушения); `verify` при повреждении MUST давать код 3. `restore` принимает `--purge-journal <путь>`, `--accept-purge-gap` (PRV-10), `--as-admin <логин>` (ACL-27) и сообщает об отзыве токенов (ACL-10).
-Трассировка: CUJ-07, CUJ-09; ADR-0013, ADR-0015; D-025, D-069, D-079, D-117, D-118
+`backup` (`--out` только офлайн), `restore --from --db`, `verify` и `compact` SHALL выполнять операции по BKP и STO и печатать итог (путь, размер, контрольная сумма, нарушения); `verify` при повреждении MUST давать код 3. `restore` принимает `--purge-journal <путь>`, `--accept-purge-gap` (PRV-10), `--as-admin <логин>` (ACL-27) и сообщает об отзыве токенов (ACL-10).
+Трассировка: CUJ-07, CUJ-09; ADR-0013, ADR-0015; D-025, D-069, D-079, D-117, D-118, D-120
 Источник: docs/research/03 §4.10
 
 #### Scenario: Целая база
