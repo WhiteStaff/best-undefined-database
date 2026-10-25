@@ -19,8 +19,8 @@
 - **THEN** это допустимо только для кэшей, буферов и тестовых моделей, но не как замена дискового индекса
 
 ### Requirement: BLD-02 Allowlist runtime-зависимостей
-Прямые runtime-зависимости SHALL входить только в allowlist: tokio, hyper, axum, tower, tower-http, serde, serde_json, toml, clap, tracing, tracing-subscriber, thiserror, unicode-normalization, libc, windows-sys, rustls, argon2, sha2, hmac, chacha20poly1305, getrandom, rand_core. serde MUST служить только API и конфигурации, не формату на диске. Весь граф проверяет BLD-04.
-Трассировка: CUJ-03, CUJ-05; ADR-0006; D-021, D-033, D-038, D-060, D-082
+Прямые runtime-зависимости SHALL входить только в allowlist: tokio, hyper, axum, tower, tower-http, serde, serde_json, toml, clap, tracing, tracing-subscriber, thiserror, unicode-normalization, libc, windows-sys, rustls, tokio-rustls, hyper-util, argon2, sha2, hmac, chacha20poly1305, getrandom, rand_core. serde MUST служить только API и конфигурации, не формату на диске. Весь граф проверяет BLD-04.
+Трассировка: CUJ-03, CUJ-05; ADR-0006; D-021, D-033, D-038, D-060, D-082, D-118
 
 #### Scenario: Крейт вне allowlist
 - **WHEN** в Cargo.toml добавлена прямая runtime-зависимость, которой нет в allowlist
@@ -33,6 +33,10 @@
 #### Scenario: Транзитивная зависимость разрешённого крейта
 - **WHEN** крейт из allowlist тянет транзитивную зависимость, которой нет в allowlist и в denylist
 - **THEN** проверка BLD-05 проходит, а сама зависимость фиксируется в Cargo.lock
+
+#### Scenario: Связка TLS с hyper и axum
+- **WHEN** в фазе 9 собирается TLS-сервер на rustls, hyper и axum
+- **THEN** прямые зависимости `tokio-rustls` и `hyper-util` проходят проверку; если связке нужен другой крейт, allowlist меняется по BLD-05 [НЕ ПОДТВЕРЖДЕНО: состав связки проверить до фазы 9]
 
 ### Requirement: BLD-03 Зависимости только для тестов
 proptest, proptest-state-machine, cargo-fuzz (libfuzzer-sys), rand_chacha, loom, tempfile и criterion SHALL подключаться только как dev-зависимости или в отдельных крейтах фаззинга и бенчмарков. Они MUST NOT попадать в граф зависимостей выпускаемого бинарника `budb`.

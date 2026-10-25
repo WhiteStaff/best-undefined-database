@@ -8,22 +8,22 @@
 
 | Capability | Префикс ID | Требований | Сценариев | CUJ, на которые ссылается |
 |---|---|---:|---:|---|
-| `access-control` | ACL | 27 | 62 | 01, 02, 03, 05, 06, 07, 08, 09, 10 |
+| `access-control` | ACL | 27 | 63 | 01, 02, 03, 05, 06, 07, 08, 09, 10 |
 | `admin-cli` | CLI | 22 | 57 | 05, 06, 07, 08, 09, 10 |
 | `backup-restore` | BKP | 17 | 36 | 03, 07, 08, 09, 10 |
-| `build-constraints` | BLD | 28 | 53 | 01, 02, 03, 05, 07, 08, 10 |
+| `build-constraints` | BLD | 28 | 54 | 01, 02, 03, 05, 07, 08, 10 |
 | `contacts` | CON | 19 | 41 | 01, 03, 04, 05, 06, 07, 09 |
-| `data-privacy` | PRV | 23 | 57 | 01, 03, 06, 07, 08, 09, 10 |
+| `data-privacy` | PRV | 24 | 60 | 01, 03, 06, 07, 08, 09, 10 |
 | `http-api` | API | 41 | 112 | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10 |
 | `import-export` | IMP | 18 | 40 | 03, 05, 06, 07, 08, 09 |
-| `name-normalization` | NAM | 13 | 26 | 02, 03, 06, 07, 08 |
+| `name-normalization` | NAM | 13 | 27 | 02, 03, 06, 07, 08 |
 | `observability` | OBS | 22 | 38 | 01, 02, 03, 05, 06, 07, 08, 09, 10 |
 | `performance-capacity` | PERF | 18 | 28 | 01, 02, 03, 05, 06, 07, 08 |
 | `phone-normalization` | PHN | 17 | 45 | 01, 03, 05, 06, 08 |
 | `search` | SRCH | 17 | 41 | 01, 02, 03, 05, 08, 09, 10 |
-| `storage-engine` | STO | 40 | 87 | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10 |
+| `storage-engine` | STO | 41 | 90 | 01, 02, 03, 04, 05, 06, 07, 08, 09, 10 |
 | `web-ui` | UI | 26 | 62 | 01, 02, 03, 04, 06, 07, 08, 09, 10 |
-| **Всего** (15 capability) | | **348** | **785** | 10 CUJ |
+| **Всего** (15 capability) | | **350** | **794** | 10 CUJ |
 
 ## 2. CUJ → требования
 
@@ -33,13 +33,13 @@
 |---|---|---:|---|
 | CUJ-01 | Кто звонит (телефон → имена) | 74 | ACL-03, ACL-11, ACL-12, ACL-15, ACL-19, ACL-25, API-05, API-10, API-11, API-29, API-31, API-35, API-36, API-37, API-38, BLD-15, BLD-21, CON-07, CON-11, OBS-02, OBS-04, OBS-06, PERF-02, PERF-03, PERF-04, PERF-05, PERF-08, PERF-09, PERF-10, PERF-11, PERF-13, PERF-15, PERF-16, PHN-01, PHN-02, PHN-05, PHN-06, PHN-11, PHN-17, PRV-21, SRCH-01, SRCH-02, SRCH-03, SRCH-06, SRCH-07, SRCH-08, SRCH-13, SRCH-14, SRCH-15, SRCH-16, SRCH-17, STO-03, STO-06, STO-09, STO-10, STO-19, STO-22, STO-24, STO-25, STO-31, STO-35, UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-19, UI-20, UI-21, UI-22, UI-23, UI-24, UI-25 |
 | CUJ-02 | Найти телефон по имени (префикс) | 54 | ACL-19, API-10, API-12, API-13, API-36, BLD-15, BLD-23, BLD-24, NAM-01, NAM-02, NAM-05, NAM-06, NAM-07, NAM-08, NAM-09, NAM-10, NAM-11, NAM-12, NAM-13, OBS-04, PERF-02, PERF-03, PERF-04, PERF-05, PERF-08, PERF-13, PERF-15, SRCH-04, SRCH-05, SRCH-06, SRCH-07, SRCH-08, SRCH-09, SRCH-10, SRCH-11, SRCH-12, SRCH-13, SRCH-14, SRCH-15, SRCH-16, SRCH-17, STO-06, STO-09, STO-22, UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-19, UI-22, UI-25, UI-26 |
-| CUJ-03 | Добавить или изменить контакт с подтверждением долговечности | 110 | ACL-03, ACL-14, API-04, API-06, API-07, API-15, API-20, API-22, API-23, API-28, API-31, API-33, API-35, BKP-13, BLD-01, BLD-02, BLD-03, BLD-04, BLD-05, BLD-06, BLD-07, BLD-08, BLD-09, BLD-12, BLD-13, BLD-14, BLD-15, BLD-17, BLD-18, BLD-20, BLD-21, BLD-22, BLD-25, BLD-28, CON-01, CON-02, CON-03, CON-04, CON-05, CON-06, CON-07, CON-08, CON-09, CON-10, CON-12, CON-14, CON-15, CON-16, CON-17, CON-18, CON-19, IMP-09, NAM-01, NAM-02, NAM-03, NAM-04, OBS-04, OBS-07, OBS-08, OBS-10, PERF-02, PERF-03, PERF-06, PERF-11, PERF-13, PERF-14, PERF-15, PERF-16, PERF-17, PHN-01, PHN-02, PHN-03, PHN-04, PHN-05, PHN-06, PHN-07, PHN-09, PHN-10, PHN-11, PHN-12, PHN-14, PHN-15, PRV-02, PRV-03, SRCH-14, STO-04, STO-05, STO-06, STO-07, STO-08, STO-10, STO-11, STO-12, STO-13, STO-14, STO-16, STO-21, STO-23, STO-27, STO-33, STO-39, UI-07, UI-08, UI-09, UI-11, UI-12, UI-17, UI-20, UI-23, UI-24 |
+| CUJ-03 | Добавить или изменить контакт с подтверждением долговечности | 111 | ACL-03, ACL-14, API-04, API-06, API-07, API-15, API-20, API-22, API-23, API-28, API-31, API-33, API-35, BKP-13, BLD-01, BLD-02, BLD-03, BLD-04, BLD-05, BLD-06, BLD-07, BLD-08, BLD-09, BLD-12, BLD-13, BLD-14, BLD-15, BLD-17, BLD-18, BLD-20, BLD-21, BLD-22, BLD-25, BLD-28, CON-01, CON-02, CON-03, CON-04, CON-05, CON-06, CON-07, CON-08, CON-09, CON-10, CON-12, CON-14, CON-15, CON-16, CON-17, CON-18, CON-19, IMP-09, NAM-01, NAM-02, NAM-03, NAM-04, OBS-04, OBS-07, OBS-08, OBS-10, PERF-02, PERF-03, PERF-06, PERF-11, PERF-13, PERF-14, PERF-15, PERF-16, PERF-17, PHN-01, PHN-02, PHN-03, PHN-04, PHN-05, PHN-06, PHN-07, PHN-09, PHN-10, PHN-11, PHN-12, PHN-14, PHN-15, PRV-02, PRV-03, SRCH-14, STO-04, STO-05, STO-06, STO-07, STO-08, STO-10, STO-11, STO-12, STO-13, STO-14, STO-16, STO-21, STO-23, STO-27, STO-33, STO-39, STO-41, UI-07, UI-08, UI-09, UI-11, UI-12, UI-17, UI-20, UI-23, UI-24 |
 | CUJ-04 | Обнаружение конфликта одновременного редактирования | 7 | API-06, API-08, API-09, API-33, CON-13, STO-08, UI-10 |
 | CUJ-05 | Интегратор подключается через API | 63 | ACL-04, ACL-07, ACL-08, ACL-09, ACL-17, ACL-20, ACL-23, ACL-25, ACL-26, API-01, API-02, API-03, API-04, API-05, API-09, API-10, API-11, API-12, API-13, API-14, API-15, API-16, API-17, API-18, API-19, API-21, API-28, API-30, API-33, API-36, API-37, API-38, BLD-02, BLD-10, CLI-06, CON-01, CON-02, CON-05, CON-11, CON-12, CON-13, CON-19, IMP-04, OBS-10, PERF-08, PERF-14, PHN-08, PHN-13, PHN-14, PHN-17, SRCH-01, SRCH-02, SRCH-03, SRCH-04, SRCH-05, SRCH-06, SRCH-07, SRCH-09, SRCH-10, SRCH-11, SRCH-12, SRCH-13, STO-12 |
-| CUJ-06 | Массовый импорт и экспорт | 54 | ACL-03, ACL-22, API-16, API-17, API-18, API-25, API-26, API-32, API-35, CLI-10, CLI-17, CON-03, CON-19, IMP-01, IMP-02, IMP-03, IMP-04, IMP-05, IMP-06, IMP-07, IMP-08, IMP-09, IMP-10, IMP-11, IMP-12, IMP-13, IMP-14, IMP-15, IMP-16, IMP-17, IMP-18, NAM-03, NAM-04, OBS-05, OBS-09, PERF-01, PERF-11, PERF-12, PHN-03, PHN-07, PHN-08, PHN-12, PHN-13, PHN-14, PHN-16, PRV-02, PRV-16, STO-09, STO-13, STO-24, STO-31, STO-32, UI-13, UI-14 |
+| CUJ-06 | Массовый импорт и экспорт | 55 | ACL-03, ACL-22, API-16, API-17, API-18, API-25, API-26, API-32, API-35, CLI-10, CLI-17, CON-03, CON-19, IMP-01, IMP-02, IMP-03, IMP-04, IMP-05, IMP-06, IMP-07, IMP-08, IMP-09, IMP-10, IMP-11, IMP-12, IMP-13, IMP-14, IMP-15, IMP-16, IMP-17, IMP-18, NAM-03, NAM-04, OBS-05, OBS-09, PERF-01, PERF-11, PERF-12, PHN-03, PHN-07, PHN-08, PHN-12, PHN-13, PHN-14, PHN-16, PRV-02, PRV-16, PRV-24, STO-09, STO-13, STO-24, STO-31, STO-32, UI-13, UI-14 |
 | CUJ-07 | Бэкап, восстановление и восстановление после сбоя | 110 | ACL-10, ACL-18, ACL-27, API-27, API-32, API-39, API-40, API-41, BKP-01, BKP-02, BKP-03, BKP-04, BKP-05, BKP-06, BKP-07, BKP-08, BKP-09, BKP-10, BKP-11, BKP-12, BKP-13, BKP-14, BKP-15, BKP-16, BKP-17, BLD-01, BLD-03, BLD-04, BLD-05, BLD-06, BLD-07, BLD-08, BLD-09, BLD-10, BLD-11, BLD-12, BLD-13, BLD-14, BLD-16, BLD-17, BLD-18, BLD-19, BLD-20, BLD-22, BLD-25, BLD-26, BLD-27, BLD-28, CLI-01, CLI-02, CLI-03, CLI-04, CLI-07, CLI-13, CLI-14, CLI-15, CLI-18, CLI-20, CLI-21, CLI-22, CON-02, CON-10, IMP-10, IMP-13, IMP-16, NAM-10, NAM-11, OBS-01, OBS-02, OBS-07, OBS-09, OBS-11, OBS-14, OBS-16, OBS-18, OBS-20, OBS-21, PERF-07, PERF-18, PRV-07, PRV-09, PRV-10, PRV-11, PRV-17, PRV-19, PRV-20, PRV-23, STO-01, STO-02, STO-03, STO-04, STO-05, STO-07, STO-11, STO-14, STO-15, STO-16, STO-17, STO-18, STO-20, STO-23, STO-25, STO-26, STO-27, STO-34, STO-36, STO-37, STO-38, STO-40, UI-15 |
-| CUJ-08 | Мониторинг состояния и ёмкости | 76 | ACL-24, API-19, API-20, API-27, API-31, API-40, API-41, BKP-04, BKP-08, BKP-10, BKP-11, BKP-17, BLD-19, BLD-27, CLI-02, CLI-06, CLI-11, CLI-13, CLI-14, CLI-17, CLI-18, CLI-21, CLI-22, IMP-06, IMP-12, IMP-14, NAM-09, NAM-10, OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, OBS-08, OBS-09, OBS-10, OBS-11, OBS-12, OBS-13, OBS-14, OBS-15, OBS-16, OBS-17, OBS-18, OBS-19, OBS-20, OBS-21, OBS-22, PERF-01, PERF-09, PERF-10, PERF-12, PERF-14, PERF-16, PERF-17, PHN-15, PHN-16, PRV-12, PRV-14, PRV-21, PRV-22, SRCH-16, STO-10, STO-18, STO-19, STO-22, STO-24, STO-26, STO-32, STO-33, STO-35, STO-40, UI-15, UI-23 |
-| CUJ-09 | Удаление ПДн по запросу субъекта | 62 | ACL-03, ACL-25, API-07, API-22, API-24, API-34, API-41, BKP-07, BKP-09, BKP-12, BKP-14, BKP-16, CLI-07, CLI-08, CLI-09, CLI-15, CLI-16, CLI-19, CLI-22, CON-09, CON-14, CON-16, CON-17, IMP-08, IMP-17, IMP-18, OBS-12, OBS-13, OBS-17, OBS-21, OBS-22, PRV-01, PRV-03, PRV-04, PRV-05, PRV-06, PRV-07, PRV-08, PRV-09, PRV-10, PRV-11, PRV-12, PRV-13, PRV-14, PRV-15, PRV-16, PRV-18, PRV-19, PRV-20, PRV-21, PRV-22, PRV-23, SRCH-15, STO-23, STO-28, STO-29, STO-30, STO-31, STO-37, STO-38, STO-39, UI-12 |
+| CUJ-08 | Мониторинг состояния и ёмкости | 77 | ACL-24, API-19, API-20, API-27, API-31, API-40, API-41, BKP-04, BKP-08, BKP-10, BKP-11, BKP-17, BLD-19, BLD-27, CLI-02, CLI-06, CLI-11, CLI-13, CLI-14, CLI-17, CLI-18, CLI-21, CLI-22, IMP-06, IMP-12, IMP-14, NAM-09, NAM-10, OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, OBS-08, OBS-09, OBS-10, OBS-11, OBS-12, OBS-13, OBS-14, OBS-15, OBS-16, OBS-17, OBS-18, OBS-19, OBS-20, OBS-21, OBS-22, PERF-01, PERF-09, PERF-10, PERF-12, PERF-14, PERF-16, PERF-17, PHN-15, PHN-16, PRV-12, PRV-14, PRV-21, PRV-22, SRCH-16, STO-10, STO-18, STO-19, STO-22, STO-24, STO-26, STO-32, STO-33, STO-35, STO-40, STO-41, UI-15, UI-23 |
+| CUJ-09 | Удаление ПДн по запросу субъекта | 63 | ACL-03, ACL-25, API-07, API-22, API-24, API-34, API-41, BKP-07, BKP-09, BKP-12, BKP-14, BKP-16, CLI-07, CLI-08, CLI-09, CLI-15, CLI-16, CLI-19, CLI-22, CON-09, CON-14, CON-16, CON-17, IMP-08, IMP-17, IMP-18, OBS-12, OBS-13, OBS-17, OBS-21, OBS-22, PRV-01, PRV-03, PRV-04, PRV-05, PRV-06, PRV-07, PRV-08, PRV-09, PRV-10, PRV-11, PRV-12, PRV-13, PRV-14, PRV-15, PRV-16, PRV-18, PRV-19, PRV-20, PRV-21, PRV-22, PRV-23, PRV-24, SRCH-15, STO-23, STO-28, STO-29, STO-30, STO-31, STO-37, STO-38, STO-39, UI-12 |
 | CUJ-10 | Администратор управляет пользователями и доступом | 42 | ACL-01, ACL-02, ACL-03, ACL-04, ACL-05, ACL-06, ACL-07, ACL-09, ACL-10, ACL-11, ACL-13, ACL-15, ACL-16, ACL-17, ACL-18, ACL-21, ACL-23, ACL-24, ACL-27, API-21, API-27, API-29, API-39, BKP-15, BLD-10, CLI-01, CLI-03, CLI-04, CLI-05, CLI-06, CLI-12, CLI-15, CLI-16, CLI-20, OBS-03, OBS-19, PRV-12, PRV-13, SRCH-17, STO-36, UI-16, UI-18 |
 
 ## 3. Требования без CUJ
@@ -80,7 +80,7 @@
 | ACL-22 | Отсутствие исходящих запросов | 1 | 06 | [0011](adr/0011-authentication-and-authorization.md) | D-016 | 9.10 |
 | ACL-23 | Публичный источник и доверенные прокси | 3 | 05, 10 | [0011](adr/0011-authentication-and-authorization.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-043, D-101 | 9.11 |
 | ACL-24 | Область действия токена metrics | 2 | 08, 10 | [0011](adr/0011-authentication-and-authorization.md) | D-103 | 9.12, 15.2 |
-| ACL-25 | Квота выданных контактов | 2 | 01, 05, 09 | [0011](adr/0011-authentication-and-authorization.md) | D-083 | 7.11, 9.12 |
+| ACL-25 | Квота выданных контактов | 3 | 01, 05, 09 | [0011](adr/0011-authentication-and-authorization.md) | D-083, D-118 | 7.11, 9.12 |
 | ACL-26 | CORS выключен | 1 | 05 | [0011](adr/0011-authentication-and-authorization.md) | D-101 | 9.11 |
 | ACL-27 | Проверка учётных записей после restore | 3 | 07, 10 | [0011](adr/0011-authentication-and-authorization.md), [0013](adr/0013-backup-from-snapshot.md) | D-079, D-113, D-117 | 11.9 |
 
@@ -94,7 +94,7 @@
 | CLI-04 | Команды, требующие остановленного сервера | 2 | 07, 10 | [0013](adr/0013-backup-from-snapshot.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-018, D-025, D-073, D-117 | 13.3 |
 | CLI-05 | Управление пользователями | 2 | 10 | [0011](adr/0011-authentication-and-authorization.md) | D-015 | 13.4 |
 | CLI-06 | Управление токенами | 4 | 05, 08, 10 | [0011](adr/0011-authentication-and-authorization.md) | D-015, D-073, D-083, D-103 | 13.4 |
-| CLI-07 | Бэкап, восстановление, проверка и уплотнение | 5 | 07, 09 | [0013](adr/0013-backup-from-snapshot.md), [0015](adr/0015-reliability-testing.md) | D-025, D-069, D-079, D-117 | 13.5 |
+| CLI-07 | Бэкап, восстановление, проверка и уплотнение | 5 | 07, 09 | [0013](adr/0013-backup-from-snapshot.md), [0015](adr/0015-reliability-testing.md) | D-025, D-069, D-079, D-117, D-118 | 13.5 |
 | CLI-08 | Purge из командной строки | 2 | 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-012, D-013, D-057, D-084 | 13.6 |
 | CLI-09 | Поиск данных субъекта | 2 | 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-013, D-102 | 13.6 |
 | CLI-10 | Импорт и экспорт | 2 | 06 | [0010](adr/0010-api-style.md) | D-016 | 13.7 |
@@ -105,9 +105,9 @@
 | CLI-15 | Подтверждение деструктивных операций | 2 | 07, 09, 10 | [0017](adr/0017-runtime-threads-and-configuration.md) | D-012, D-057, D-102 | 13.8 |
 | CLI-16 | Секреты и ПДн не в аргументах и выводе | 2 | 09, 10 | [0011](adr/0011-authentication-and-authorization.md) | D-013, D-015 | 13.8 |
 | CLI-17 | Повторная нормализация телефонов | 3 | 06, 08 | [0008](adr/0008-phone-normalization.md) | D-073 | 13.9 |
-| CLI-18 | Схема конфигурации | 4 | 07, 08 | [0017](adr/0017-runtime-threads-and-configuration.md) | D-033, D-073, D-101 | 13.2 |
+| CLI-18 | Схема конфигурации | 4 | 07, 08 | [0017](adr/0017-runtime-threads-and-configuration.md) | D-033, D-073, D-101, D-118 | 13.2 |
 | CLI-19 | Затирание данных субъекта из командной строки | 2 | 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-013, D-102 | 13.10 |
-| CLI-20 | Подтверждение пользователей после restore | 3 | 07, 10 | [0011](adr/0011-authentication-and-authorization.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-113, D-117 | 11.9 |
+| CLI-20 | Подтверждение пользователей после restore | 3 | 07, 10 | [0011](adr/0011-authentication-and-authorization.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-113, D-117, D-118 | 11.9 |
 | CLI-21 | Снятие degraded-read-only из командной строки | 3 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-089, D-117 | 5.13 |
 | CLI-22 | Подтверждение скачка часов из командной строки | 2 | 07, 08, 09 | [0017](adr/0017-runtime-threads-and-configuration.md) | D-081, D-117 | 10.9 |
 
@@ -131,14 +131,14 @@
 | BKP-14 | Новая линия БД после восстановления | 1 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-080, D-095 | 11.7 |
 | BKP-15 | Отзыв токенов и сессий после восстановления | 2 | 07, 10 | [0011](adr/0011-authentication-and-authorization.md), [0013](adr/0013-backup-from-snapshot.md) | D-079, D-117 | 11.7 |
 | BKP-16 | Отказ при неподтверждённой актуальности журнала purge | 2 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-036, D-069 | 11.3 |
-| BKP-17 | Периодический бэкап | 1 | 07, 08 | [0013](adr/0013-backup-from-snapshot.md) | D-025 | 11.8 |
+| BKP-17 | Периодический бэкап | 1 | 07, 08 | [0013](adr/0013-backup-from-snapshot.md) | D-025, D-118 | 11.8 |
 
 ### build-constraints
 
 | ID | Требование | Сценариев | CUJ | ADR | Решения | Задачи |
 |---|---|---:|---|---|---|---|
 | BLD-01 | Хранение написано с нуля на Rust (NFR-SCRATCH) | 2 | 03, 07 | [0002](adr/0002-implementation-language-rust.md), [0006](adr/0006-dependency-policy-from-scratch.md) | D-020, D-021 | 1.2 |
-| BLD-02 | Allowlist runtime-зависимостей | 3 | 03, 05 | [0006](adr/0006-dependency-policy-from-scratch.md) | D-021, D-033, D-038, D-060, D-082 | 1.2, 1.8 |
+| BLD-02 | Allowlist runtime-зависимостей | 4 | 03, 05 | [0006](adr/0006-dependency-policy-from-scratch.md) | D-021, D-033, D-038, D-060, D-082, D-118 | 1.2, 1.8 |
 | BLD-03 | Зависимости только для тестов | 1 | 03, 07 | [0006](adr/0006-dependency-policy-from-scratch.md), [0015](adr/0015-reliability-testing.md) | D-021, D-026, D-060, D-066, D-097 | 1.2, 1.8 |
 | BLD-04 | Denylist крейтов | 1 | 03, 07 | [0004](adr/0004-no-mmap-own-page-cache.md), [0006](adr/0006-dependency-policy-from-scratch.md) | D-021, D-060 | 1.2 |
 | BLD-05 | Проверка политики зависимостей в CI | 2 | 03, 07 | [0006](adr/0006-dependency-policy-from-scratch.md) | D-021, D-060, D-108 | 1.3 |
@@ -205,7 +205,7 @@
 | PRV-09 | Журнал purge без ПДн | 4 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-036, D-042, D-075, D-076, D-084 | 10.3 |
 | PRV-10 | Повторное применение журнала при восстановлении | 4 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-069, D-075 | 11.3 |
 | PRV-11 | Срок хранения бэкапов | 2 | 07, 09 | [0013](adr/0013-backup-from-snapshot.md) | D-025, D-037, D-081 | 11.6 |
-| PRV-12 | Журнал аудита изменений и доступа | 4 | 08, 09, 10 | [0012](adr/0012-deletion-trash-and-purge.md) | D-065, D-100, D-117 | 10.4, 10.8 |
+| PRV-12 | Журнал аудита изменений и доступа | 4 | 08, 09, 10 | [0012](adr/0012-deletion-trash-and-purge.md) | D-065, D-100, D-117, D-118 | 10.4, 10.8 |
 | PRV-13 | Журнал аудита без значений ПДн | 2 | 09, 10 | [0012](adr/0012-deletion-trash-and-purge.md) | D-012, D-100 | 10.4 |
 | PRV-14 | Маскирование ПДн в логах и метриках | 2 | 08, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-013 | 10.5 |
 | PRV-15 | Выгрузка данных субъекта | 2 | 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-013, D-016, D-100, D-102 | 10.6 |
@@ -214,9 +214,10 @@
 | PRV-18 | Затирание прежних значений и данных субъекта в чужих контактах | 2 | 09 | [0003](adr/0003-storage-engine-cow-btree.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-102 | 8.12 |
 | PRV-19 | Ограничения, которые закрывает оператор | 3 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-105 | 10.10 |
 | PRV-20 | Аудит согласован со сбоями и restore | 2 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-080, D-095 | 10.8 |
-| PRV-21 | Сброс аудита чтений и поиска при вводе | 3 | 01, 08, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-100, D-117 | 10.11 |
-| PRV-22 | Нехватка места на ФС журнала аудита | 3 | 08, 09 | [0005](adr/0005-commit-and-durability-protocol.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-072, D-117 | 10.11 |
+| PRV-21 | Сброс аудита чтений и поиска при вводе | 3 | 01, 08, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-100, D-117, D-118 | 10.11 |
+| PRV-22 | Нехватка места на ФС журнала аудита | 3 | 08, 09 | [0005](adr/0005-commit-and-durability-protocol.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-072, D-117, D-118 | 10.11, 10.13 |
 | PRV-23 | Purge в режиме degraded-read-only | 3 | 07, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-069, D-076, D-117 | 10.12 |
+| PRV-24 | Аудит экспорта | 3 | 06, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-100, D-118 | 10.13 |
 
 ### http-api
 
@@ -257,11 +258,11 @@
 | API-33 | Повтор изменений и неизвестный исход | 2 | 03, 04, 05 | [0010](adr/0010-api-style.md) | D-034, D-059 | 8.11 |
 | API-34 | Затирание данных субъекта в чужих контактах | 2 | 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-102 | 8.12, 13.10 |
 | API-35 | Регион нормализации в запросах | 2 | 01, 03, 06 | [0008](adr/0008-phone-normalization.md), [0010](adr/0010-api-style.md) | D-010, D-052 | 8.11 |
-| API-36 | Коды тайм-аута поиска и исчерпания квоты | 2 | 01, 02, 05 | [0010](adr/0010-api-style.md) | D-078, D-083, D-112 | 7.11 |
+| API-36 | Коды тайм-аута поиска и исчерпания квоты | 2 | 01, 02, 05 | [0010](adr/0010-api-style.md) | D-078, D-083, D-112, D-118 | 7.11 |
 | API-37 | CSRF для поиска и освобождение bearer-запросов | 2 | 01, 05 | [0010](adr/0010-api-style.md), [0011](adr/0011-authentication-and-authorization.md) | D-068, D-113 | 9.5 |
 | API-38 | Префикс телефона без плюса — национальный номер | 3 | 01, 05 | [0008](adr/0008-phone-normalization.md), [0010](adr/0010-api-style.md) | D-052, D-113, D-116 | 6.9 |
-| API-39 | Подтверждение пользователя после restore | 3 | 07, 10 | [0010](adr/0010-api-style.md), [0011](adr/0011-authentication-and-authorization.md) | D-113, D-117 | 11.9 |
-| API-40 | Снятие degraded-read-only после повреждения | 3 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md), [0010](adr/0010-api-style.md) | D-089, D-117 | 5.13 |
+| API-39 | Подтверждение пользователя после restore | 3 | 07, 10 | [0010](adr/0010-api-style.md), [0011](adr/0011-authentication-and-authorization.md) | D-113, D-117, D-118 | 11.9 |
+| API-40 | Снятие degraded-read-only после повреждения | 3 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md), [0010](adr/0010-api-style.md) | D-089, D-117, D-118 | 5.13 |
 | API-41 | Подтверждение скачка часов | 3 | 07, 08, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-081, D-117 | 10.9 |
 
 ### import-export
@@ -285,7 +286,7 @@
 | IMP-15 | Защита от CSV-инъекции | 4 | 06 | [0010](adr/0010-api-style.md) | D-016, D-060, D-106 | 12.5 |
 | IMP-16 | Обратимость экспорта | 2 | 06, 07 | [0007](adr/0007-data-model.md) | D-016, D-054, D-071 | 12.5 |
 | IMP-17 | Экспорт и purge | 3 | 06, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-065, D-084 | 12.7 |
-| IMP-18 | Хранение загруженного файла импорта | 3 | 06, 09 | [0010](adr/0010-api-style.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-065, D-113 | 12.7 |
+| IMP-18 | Хранение загруженного файла импорта | 3 | 06, 09 | [0010](adr/0010-api-style.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-065, D-113, D-118 | 12.7 |
 
 ### name-normalization
 
@@ -303,7 +304,7 @@
 | NAM-10 | Переиндексация при смене версии | 1 | 02, 07, 08 | [0009](adr/0009-name-search-key.md) | D-011, D-051 | 6.4 |
 | NAM-11 | Атомарность переиндексации | 1 | 02, 07 | [0003](adr/0003-storage-engine-cow-btree.md), [0009](adr/0009-name-search-key.md) | D-011, D-019 | 6.4 |
 | NAM-12 | Ключ поискового запроса | 1 | 02 | [0009](adr/0009-name-search-key.md) | D-011, D-051, D-058 | 6.3 |
-| NAM-13 | Ключи слов имени | 3 | 02 | [0009](adr/0009-name-search-key.md) | D-051 | 6.3 |
+| NAM-13 | Ключи слов имени | 4 | 02 | [0009](adr/0009-name-search-key.md) | D-051, D-118 | 6.3 |
 
 ### observability
 
@@ -326,7 +327,7 @@
 | OBS-15 | Свежесть метрик | 1 | 08 | [0010](adr/0010-api-style.md) | D-024 | 15.4 |
 | OBS-16 | Метрики режимов отказа | 2 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-035, D-063, D-072, D-089 | 15.5 |
 | OBS-17 | Метрики затирания и удержания страниц | 2 | 08, 09 | [0003](adr/0003-storage-engine-cow-btree.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-092, D-093, D-102 | 15.5 |
-| OBS-18 | Свободное место на файловых системах | 1 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-065, D-072 | 15.5 |
+| OBS-18 | Свободное место на файловых системах | 1 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-065, D-072, D-118 | 15.5 |
 | OBS-19 | IP клиента в логах и аудите | 2 | 08, 10 | [0010](adr/0010-api-style.md), [0011](adr/0011-authentication-and-authorization.md) | D-101 | 9.11 |
 | OBS-20 | Правила алертов в поставке | 1 | 07, 08 | [0010](adr/0010-api-style.md) | D-035, D-081, D-089, D-093, D-117 | 15.5 |
 | OBS-21 | Пауза из-за скачка часов | 1 | 07, 08, 09 | [0012](adr/0012-deletion-trash-and-purge.md), [0013](adr/0013-backup-from-snapshot.md) | D-081, D-117 | 10.9, 15.5 |
@@ -349,7 +350,7 @@
 | PERF-11 | Пропускная способность | 2 | 01, 03, 06 | [0003](adr/0003-storage-engine-cow-btree.md), [0005](adr/0005-commit-and-durability-protocol.md) | D-024, D-032, D-073, D-094 | 16.4, 16.6 |
 | PERF-12 | Размер файла | 1 | 06, 08 | [0003](adr/0003-storage-engine-cow-btree.md) | D-024, D-094 | 16.5, 16.6 |
 | PERF-13 | Воспроизводимый бенчмарк | 2 | 01, 02, 03 | [0015](adr/0015-reliability-testing.md) | D-024 | 16.1 |
-| PERF-14 | Backpressure при перегрузке | 2 | 03, 05, 08 | [0010](adr/0010-api-style.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-032 | 4.5 |
+| PERF-14 | Backpressure при перегрузке | 2 | 03, 05, 08 | [0010](adr/0010-api-style.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-032, D-118 | 4.5 |
 | PERF-15 | Метод измерения задержек | 2 | 01, 02, 03 | [0015](adr/0015-reliability-testing.md) | D-024 | 16.1 |
 | PERF-16 | SLO как условие выпуска | 1 | 01, 03, 08 | [0015](adr/0015-reliability-testing.md) | D-024, D-094 | 16.6 |
 | PERF-17 | Отчёт об усилении записи | 2 | 03, 08 | [0003](adr/0003-storage-engine-cow-btree.md), [0015](adr/0015-reliability-testing.md) | D-094, D-102 | 16.7 |
@@ -385,7 +386,7 @@
 | SRCH-02 | Недопустимый телефон в запросе | 1 | 01, 05 | [0008](adr/0008-phone-normalization.md), [0010](adr/0010-api-style.md) | D-010 | 7.6 |
 | SRCH-03 | Префиксный поиск по телефону | 3 | 01, 05 | [0008](adr/0008-phone-normalization.md) | D-010, D-066, D-074 | 7.6 |
 | SRCH-04 | Точный поиск по имени | 2 | 02, 05 | [0009](adr/0009-name-search-key.md) | D-011, D-051 | 7.7 |
-| SRCH-05 | Префиксный поиск по имени | 4 | 02, 05 | [0009](adr/0009-name-search-key.md) | D-051, D-062, D-074 | 7.7 |
+| SRCH-05 | Префиксный поиск по имени | 4 | 02, 05 | [0009](adr/0009-name-search-key.md) | D-051, D-062, D-074, D-112 | 7.7 |
 | SRCH-06 | Границы длины запроса | 4 | 01, 02, 05 | [0010](adr/0010-api-style.md) | D-022, D-058, D-083 | 7.8 |
 | SRCH-07 | Состав результата поиска | 1 | 01, 02, 05 | [0007](adr/0007-data-model.md) | D-009, D-057 | 7.8 |
 | SRCH-08 | Порядок выдачи | 3 | 01, 02 | [0009](adr/0009-name-search-key.md) | D-011, D-062 | 3.1, 7.7, 7.8 |
@@ -396,8 +397,8 @@
 | SRCH-13 | Пустой результат | 1 | 01, 02, 05 | [0010](adr/0010-api-style.md) | D-011, D-048 | 7.8 |
 | SRCH-14 | Чтение своих записей | 2 | 01, 02, 03 | [0003](adr/0003-storage-engine-cow-btree.md), [0005](adr/0005-commit-and-durability-protocol.md) | D-018, D-019 | 7.10 |
 | SRCH-15 | Корзина не участвует в поиске | 2 | 01, 02, 09 | [0012](adr/0012-deletion-trash-and-purge.md) | D-012, D-041, D-064 | 7.4 |
-| SRCH-16 | Тайм-аут поиска | 1 | 01, 02, 08 | [0017](adr/0017-runtime-threads-and-configuration.md) | D-078, D-112 | 7.11 |
-| SRCH-17 | Квота выдачи результатов | 2 | 01, 02, 10 | [0011](adr/0011-authentication-and-authorization.md) | D-083, D-112 | 7.11 |
+| SRCH-16 | Тайм-аут поиска | 1 | 01, 02, 08 | [0017](adr/0017-runtime-threads-and-configuration.md) | D-078, D-112, D-118 | 7.11 |
+| SRCH-17 | Квота выдачи результатов | 2 | 01, 02, 10 | [0011](adr/0011-authentication-and-authorization.md) | D-083, D-112, D-118 | 7.11 |
 
 ### storage-engine
 
@@ -415,7 +416,7 @@
 | STO-10 | Правило переиспользования освобождённых страниц | 3 | 01, 03, 08 | [0003](adr/0003-storage-engine-cow-btree.md) | D-018, D-087 | 4.2 |
 | STO-11 | Протокол коммита | 3 | 03, 07 | [0005](adr/0005-commit-and-durability-protocol.md) | D-019, D-065, D-080, D-094 | 4.4 |
 | STO-12 | Подтверждение только после протокола коммита | 3 | 03, 05 | [0005](adr/0005-commit-and-durability-protocol.md) | D-019, D-034 | 4.4, 5.2 |
-| STO-13 | Group commit | 3 | 03, 06 | [0005](adr/0005-commit-and-durability-protocol.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-018, D-032, D-094 | 4.5 |
+| STO-13 | Group commit | 3 | 03, 06 | [0005](adr/0005-commit-and-durability-protocol.md), [0017](adr/0017-runtime-threads-and-configuration.md) | D-018, D-032, D-094, D-118 | 4.5 |
 | STO-14 | Платформенные примитивы сброса | 1 | 03, 07 | [0005](adr/0005-commit-and-durability-protocol.md), [0014](adr/0014-platforms.md) | D-019, D-023 | 4.4 |
 | STO-15 | Сброс каталога после операций с файлами | 2 | 07 | [0005](adr/0005-commit-and-durability-protocol.md), [0014](adr/0014-platforms.md), [0018](adr/0018-unsafe-isolation-budb-sys.md) | D-019, D-023, D-090 | 1.7, 4.4 |
 | STO-16 | Fail-stop при ошибке записи или сброса | 3 | 03, 07 | [0005](adr/0005-commit-and-durability-protocol.md) | D-019, D-034, D-065, D-072, D-078, D-117 | 5.2 |
@@ -435,7 +436,7 @@
 | STO-30 | Перезапись страниц с ключами очищенного контакта | 2 | 09 | [0003](adr/0003-storage-engine-cow-btree.md), [0012](adr/0012-deletion-trash-and-purge.md) | D-077 | 10.2 |
 | STO-31 | Кооперативный отзыв снимка | 2 | 01, 06, 09 | [0003](adr/0003-storage-engine-cow-btree.md) | D-092 | 4.3 |
 | STO-32 | Лимит объёма удерживаемых страниц | 1 | 06, 08 | [0003](adr/0003-storage-engine-cow-btree.md), [0013](adr/0013-backup-from-snapshot.md) | D-093 | 4.3 |
-| STO-33 | Нехватка места на диске до коммита | 3 | 03, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-072, D-086 | 4.8, 5.4 |
+| STO-33 | Нехватка места на диске до коммита | 3 | 03, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-072, D-086, D-118 | 4.8, 5.4 |
 | STO-34 | Переписывание мета-страницы при открытии | 2 | 07 | [0005](adr/0005-commit-and-durability-protocol.md) | D-088 | 5.1 |
 | STO-35 | Режим degraded-read-only | 2 | 01, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-072, D-078, D-089 | 4.8, 5.9 |
 | STO-36 | Атомарное создание файла БД | 1 | 07, 10 | [0005](adr/0005-commit-and-durability-protocol.md) | D-019 | 4.8 |
@@ -443,6 +444,7 @@
 | STO-38 | Линия БД и идентификатор запуска | 2 | 07, 09 | [0005](adr/0005-commit-and-durability-protocol.md), [0013](adr/0013-backup-from-snapshot.md) | D-080, D-095 | 2.4, 10.8 |
 | STO-39 | Монотонный next_contact_id | 1 | 03, 09 | [0007](adr/0007-data-model.md) | D-057, D-075 | 2.4, 7.2 |
 | STO-40 | Снятие degraded-read-only после повреждения | 4 | 07, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-078, D-089, D-117 | 5.13 |
+| STO-41 | Два порога свободного места | 3 | 03, 08 | [0005](adr/0005-commit-and-durability-protocol.md) | D-072, D-109, D-118 | 4.8 |
 
 ### web-ui
 
@@ -483,14 +485,14 @@
 | 0002 | [Язык реализации: Rust](adr/0002-implementation-language-rust.md) | 4 | BLD-01, BLD-06, BLD-07, BLD-20 |
 | 0003 | [Движок хранения: copy-on-write B+tree с двумя мета-страницами](adr/0003-storage-engine-cow-btree.md) | 42 | BKP-01, BKP-11, BLD-26, IMP-13, NAM-11, OBS-09, OBS-17, PERF-01, PERF-02, PERF-03, PERF-04, PERF-05, PERF-07, PERF-10, PERF-11, PERF-12, PERF-17, PRV-06, PRV-07, PRV-18, SRCH-11, SRCH-14, STO-01, STO-02, STO-03, STO-04, STO-05, STO-06, STO-07, STO-08, STO-09, STO-10, STO-17, STO-20, STO-24, STO-25, STO-26, STO-27, STO-29, STO-30, STO-31, STO-32 |
 | 0004 | [Без mmap: явный pread/pwrite и собственный кэш страниц](adr/0004-no-mmap-own-page-cache.md) | 4 | BLD-04, PERF-04, PERF-09, STO-22 |
-| 0005 | [Протокол коммита и долговечности](adr/0005-commit-and-durability-protocol.md) | 45 | API-31, API-40, BKP-03, BKP-05, BKP-11, BLD-08, BLD-13, BLD-14, CLI-21, CON-10, IMP-09, IMP-10, OBS-01, OBS-07, OBS-08, OBS-14, OBS-16, OBS-18, PERF-06, PERF-07, PERF-11, PRV-22, SRCH-14, STO-03, STO-07, STO-11, STO-12, STO-13, STO-14, STO-15, STO-16, STO-17, STO-18, STO-19, STO-21, STO-23, STO-25, STO-28, STO-33, STO-34, STO-35, STO-36, STO-37, STO-38, STO-40 |
+| 0005 | [Протокол коммита и долговечности](adr/0005-commit-and-durability-protocol.md) | 46 | API-31, API-40, BKP-03, BKP-05, BKP-11, BLD-08, BLD-13, BLD-14, CLI-21, CON-10, IMP-09, IMP-10, OBS-01, OBS-07, OBS-08, OBS-14, OBS-16, OBS-18, PERF-06, PERF-07, PERF-11, PRV-22, SRCH-14, STO-03, STO-07, STO-11, STO-12, STO-13, STO-14, STO-15, STO-16, STO-17, STO-18, STO-19, STO-21, STO-23, STO-25, STO-28, STO-33, STO-34, STO-35, STO-36, STO-37, STO-38, STO-40, STO-41 |
 | 0006 | [Политика зависимостей «с нуля» (NFR-SCRATCH)](adr/0006-dependency-policy-from-scratch.md) | 10 | BLD-01, BLD-02, BLD-03, BLD-04, BLD-05, BLD-08, BLD-11, BLD-23, BLD-24, NAM-08 |
 | 0007 | [Модель данных: агрегат Contact с вложенными телефонами](adr/0007-data-model.md) | 25 | API-04, API-30, BKP-13, CON-01, CON-02, CON-03, CON-04, CON-06, CON-07, CON-08, CON-09, CON-10, CON-11, CON-12, CON-18, CON-19, IMP-02, IMP-04, IMP-11, IMP-16, PRV-01, PRV-02, SRCH-07, STO-06, STO-39 |
 | 0008 | [Нормализация телефонов: собственный разбор и проверка «возможного номера»](adr/0008-phone-normalization.md) | 28 | API-28, API-35, API-38, CLI-17, CON-04, CON-05, IMP-03, PHN-01, PHN-02, PHN-03, PHN-04, PHN-05, PHN-06, PHN-07, PHN-08, PHN-09, PHN-10, PHN-11, PHN-12, PHN-13, PHN-14, PHN-15, PHN-16, PHN-17, SRCH-01, SRCH-02, SRCH-03, UI-08 |
 | 0009 | [Поисковый ключ имени: NFKC → full case folding → ё→е](adr/0009-name-search-key.md) | 18 | BLD-23, BLD-24, NAM-01, NAM-02, NAM-03, NAM-04, NAM-05, NAM-06, NAM-07, NAM-08, NAM-09, NAM-10, NAM-11, NAM-12, NAM-13, SRCH-04, SRCH-05, SRCH-08 |
 | 0010 | [Стиль API: HTTP/JSON `/api/v1`, поиск через POST с телом, Admin CLI](adr/0010-api-style.md) | 68 | API-01, API-02, API-03, API-04, API-05, API-06, API-07, API-08, API-09, API-10, API-11, API-12, API-13, API-14, API-15, API-16, API-17, API-18, API-19, API-20, API-25, API-26, API-27, API-28, API-30, API-31, API-32, API-33, API-35, API-36, API-37, API-38, API-39, API-40, CLI-10, CON-12, CON-13, IMP-01, IMP-04, IMP-05, IMP-07, IMP-08, IMP-12, IMP-14, IMP-15, IMP-18, OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-12, OBS-13, OBS-15, OBS-19, OBS-20, OBS-22, PERF-08, PERF-14, PHN-14, PRV-16, SRCH-02, SRCH-06, SRCH-09, SRCH-10, SRCH-12, SRCH-13 |
 | 0011 | [Аутентификация и авторизация: локальные учётные записи, роли, cookie-сессия для UI и bearer-токены для API](adr/0011-authentication-and-authorization.md) | 45 | ACL-01, ACL-02, ACL-03, ACL-04, ACL-05, ACL-06, ACL-07, ACL-08, ACL-09, ACL-10, ACL-11, ACL-12, ACL-13, ACL-14, ACL-15, ACL-16, ACL-17, ACL-18, ACL-19, ACL-20, ACL-21, ACL-22, ACL-23, ACL-24, ACL-25, ACL-26, ACL-27, API-11, API-21, API-27, API-29, API-37, API-39, BKP-15, CLI-05, CLI-06, CLI-12, CLI-16, CLI-20, OBS-03, OBS-19, SRCH-17, UI-16, UI-18, UI-24 |
-| 0012 | [Удаление: корзина с ограниченным сроком, автоматическая очистка и purge по запросу субъекта](adr/0012-deletion-trash-and-purge.md) | 48 | API-07, API-22, API-23, API-24, API-34, API-41, BKP-07, BKP-12, BKP-14, BKP-16, CLI-08, CLI-09, CLI-19, CON-14, CON-15, CON-16, CON-17, IMP-17, IMP-18, OBS-17, OBS-21, OBS-22, PRV-01, PRV-03, PRV-04, PRV-05, PRV-06, PRV-07, PRV-08, PRV-09, PRV-10, PRV-12, PRV-13, PRV-14, PRV-15, PRV-18, PRV-19, PRV-20, PRV-21, PRV-22, PRV-23, SRCH-15, STO-28, STO-29, STO-30, STO-37, UI-11, UI-12 |
+| 0012 | [Удаление: корзина с ограниченным сроком, автоматическая очистка и purge по запросу субъекта](adr/0012-deletion-trash-and-purge.md) | 49 | API-07, API-22, API-23, API-24, API-34, API-41, BKP-07, BKP-12, BKP-14, BKP-16, CLI-08, CLI-09, CLI-19, CON-14, CON-15, CON-16, CON-17, IMP-17, IMP-18, OBS-17, OBS-21, OBS-22, PRV-01, PRV-03, PRV-04, PRV-05, PRV-06, PRV-07, PRV-08, PRV-09, PRV-10, PRV-12, PRV-13, PRV-14, PRV-15, PRV-18, PRV-19, PRV-20, PRV-21, PRV-22, PRV-23, PRV-24, SRCH-15, STO-28, STO-29, STO-30, STO-37, UI-11, UI-12 |
 | 0013 | [Бэкап из MVCC-снимка, восстановление и проверка целостности](adr/0013-backup-from-snapshot.md) | 29 | ACL-27, API-41, BKP-01, BKP-02, BKP-03, BKP-04, BKP-05, BKP-06, BKP-07, BKP-08, BKP-10, BKP-12, BKP-13, BKP-14, BKP-15, BKP-16, BKP-17, CLI-04, CLI-07, OBS-11, OBS-21, PERF-18, PRV-09, PRV-10, PRV-11, PRV-17, PRV-19, STO-32, STO-38 |
 | 0014 | [Платформы: Linux — tier 1, Windows и macOS — tier 2](adr/0014-platforms.md) | 7 | BLD-09, BLD-18, BLD-22, PRV-17, STO-14, STO-15, STO-20 |
 | 0015 | [Тестирование надёжности: детерминированная симуляция, внедрение сбоев, перебор состояний, модельные тесты, фаззинг, LazyFS](adr/0015-reliability-testing.md) | 24 | BKP-08, BKP-09, BKP-10, BLD-03, BLD-12, BLD-13, BLD-14, BLD-15, BLD-16, BLD-17, BLD-18, BLD-19, BLD-21, BLD-22, BLD-25, BLD-26, BLD-27, BLD-28, CLI-07, PERF-13, PERF-15, PERF-16, PERF-17, PRV-06 |
