@@ -2,7 +2,7 @@
 
 - **Тип:** LLM-expert review. Персона: ведущий инженер движков хранения и SRE (страничные B+tree и COW-хранилища, разбор инцидентов с потерей данных; ALICE, FAST'17, fsyncgate, LMDB, bbolt, redb, DST FoundationDB и TigerBeetle).
 - **Дата:** 2026-10-24.
-- **Что прочитано:** `openspec/changes/add-phonebook-db-v1/specs/{storage-engine,backup-restore,performance-capacity,build-constraints,observability}/spec.md`, `design.md`, ADR 0002, 0003, 0004, 0005, 0013, 0014, 0015, 0017, `docs/research/02-storage-engine-and-language.md`, `docs/orchestrator-decisions.md`, журнал решений `memory/decision-log.md`.
+- **Что прочитано:** `openspec/changes/add-phonebook-db-v1/specs/{storage-engine,backup-restore,performance-capacity,build-constraints,observability}/spec.md`, `design.md`, ADR 0002, 0003, 0004, 0005, 0013, 0014, 0015, 0017, `docs/research/02-storage-engine-and-language.md`, `docs/orchestrator-decisions.md`, журнал решений оркестратора (вне репозитория; перенесён в `docs/orchestrator-decisions.md`).
 - **Учтённые решения.** D-034…D-067 известны и ещё не внесены в spec.md, поэтому повторно я их не перечисляю. За время ревью в журнале появились D-068…D-084. Если замечание уже закрыто одним из них, это указано в столбце «Источник»; если решение само содержит ошибку, замечание оставлено (EX1-05, EX1-13).
 - **Пометки:** `[РАСЧЁТ]` — мой расчёт, формула приведена рядом; `[ОЦЕНКА]` — экспертная оценка без количественного источника.
 
