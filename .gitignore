@@ -2,5 +2,8 @@ node_modules/
 target/
 .DS_Store
 *.tmp
+*.budb
+backups/
 .claude/scheduled_tasks.lock
+.claude/settings.local.json
 .claude/worktrees/
