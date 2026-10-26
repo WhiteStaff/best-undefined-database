@@ -1,0 +1,26 @@
+name: spec-check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  OPENSPEC_TELEMETRY: "0"
+
+jobs:
+  spec-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: OpenSpec validate
+        run: npx --yes @fission-ai/openspec@1.15.0 validate --all --strict
+      - name: Traceability
+        run: node scripts/traceability.mjs --check
+      - name: Check links
+        run: node scripts/check-links.mjs
