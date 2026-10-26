@@ -3,7 +3,7 @@
 - **Дата:** 2026-10-24 (все ссылки ниже открывались в этот день, если не сказано иное)
 - **Автор:** агент-исследователь (по поручению оркестратора)
 - **Назначение:** база фактов для спецификации «best-undefined-database» (БД имён и телефонов, написанная с нуля, с UI и программным API)
-- **Обозначения:** `[НЕ ПОДТВЕРЖДЕНО]` — не удалось проверить по первоисточнику; `[ИНТЕРПРЕТАЦИЯ]` — вывод агента, а не утверждение источника; `[ПРОВЕРЕНО ЛОКАЛЬНО]` — проверено запуском OpenSpec CLI 1.15.0 в scratchpad.
+- **Обозначения:** `[НЕ ПОДТВЕРЖДЕНО]` — не удалось проверить по первоисточнику; `[ИНТЕРПРЕТАЦИЯ]` — вывод агента, а не утверждение источника; `[ПРОВЕРЕНО ЛОКАЛЬНО]` — проверено запуском OpenSpec CLI 1.15.0 в локальном каталоге агента.
 
 ---
 
@@ -194,7 +194,7 @@ openspec/changes/archive/.gitkeep
 - При архивации ADDED дописываются, MODIFIED заменяют, REMOVED удаляют; удаление последнего требования требует `retire_capabilities: true`. MODIFIED/RENAMED к несуществующей спеке архив отвергнет.
 
 ### B6. Правила `openspec validate` — результаты проб `[ПРОВЕРЕНО ЛОКАЛЬНО]`
-Пробы в `…\scratchpad\openspec-probe` (OpenSpec 1.15.0). `--strict` превращает WARNING в провал (exit code 1); ERROR проваливает и без `--strict`.
+Пробы в локальном каталоге агента, проба `openspec-probe` (OpenSpec 1.15.0). `--strict` превращает WARNING в провал (exit code 1); ERROR проваливает и без `--strict`.
 
 | # | Случай | Обычный | `--strict` |
 |---|---|---|---|
@@ -236,7 +236,7 @@ export OPENSPEC_TELEMETRY=0
 npx --yes @fission-ai/openspec@1.15.0 init --tools claude --language "Russian" --profile core --no-animation --no-copilot-cloud .
 npx --yes @fission-ai/openspec@1.15.0 list --json        # проверить, что root найден
 ```
-`[ПРОВЕРЕНО ЛОКАЛЬНО]` команда init с этими флагами отработала в `…\scratchpad\openspec-probe2` и записала `Language: Russian` в `config.yaml`.
+`[ПРОВЕРЕНО ЛОКАЛЬНО]` команда init с этими флагами отработала в локальном каталоге агента (проба `openspec-probe2`) и записала `Language: Russian` в `config.yaml`.
 Затем дописать в `openspec/config.yaml` → `context:` (кратко, это уходит в каждый запрос) и `rules:`:
 ```yaml
 schema: spec-driven
